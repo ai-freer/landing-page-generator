@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | AI Precision Device</title>
+    <style>
+        /* ===== CSS Reset & Base ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Core Palette — Monochromatic Black + Silver */
+            --black: #000000;
+            --silver: #c0c0c0;
+            --cool-gray: #a0a0a0;
+            --cool-blue: #b0c4de;
+            --white: #ffffff;
+            --dim: #808080;
+            --faint: #404040;
+            --border: rgba(255, 255, 255, 0.1);
+            --border-hover: rgba(255, 255, 255, 0.25);
+
+            /* Fonts */
+            --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            --font-mono: 'SF Mono', 'Fira Code', 'Courier New', Courier, monospace;
+
+            /* Layout */
+            --container: 1200px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-display);
+            background: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== Keyframes ===== */
+        @keyframes volumetricPulse {
+            0%, 100% { opacity: 0.15; transform: scale(1); }
+            50% { opacity: 0.25; transform: scale(1.05); }
+        }
+
+        @keyframes lensFlare {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes scrollDown {
+            0% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(12px); opacity: 0.3; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes breathe {
+            0%, 100% { box-shadow: 0 0 30px rgba(176, 196, 222, 0.15); }
+            50% { box-shadow: 0 0 60px rgba(176, 196, 222, 0.3); }
+        }
+
+        @keyframes specLine {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        /* ===== Navbar ===== */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0;
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-brand {
+            font-family: var(--font-mono);
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--white);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .navbar-links a {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--dim);
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .navbar-links a:hover { color: var(--white); }
+
+        .navbar-cta {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--black);
+            text-decoration: none;
+            padding: 10px 28px;
+            background: var(--white);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .navbar-cta:hover {
+            background: var(--silver);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== Section 1: Macro Close-up Hero ===== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Volumetric Lighting Background */
+        .hero-volumetric {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-volumetric::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 800px; height: 800px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(
+                ellipse at center,
+                rgba(176, 196, 222, 0.12) 0%,
+                rgba(176, 196, 222, 0.04) 35%,
+                transparent 70%
+            );
+            animation: volumetricPulse 6s ease-in-out infinite;
+        }
+
+        .hero-volumetric::after {
+            content: '';
+            position: absolute;
+            top: 30%; right: 10%;
+            width: 400px; height: 400px;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(192, 192, 192, 0.06) 0%,
+                transparent 60%
+            );
+            animation: volumetricPulse 8s ease-in-out infinite 2s;
+        }
+
+        /* Product Visual — CSS 3D Device */
+        .hero-product {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 120px;
+        }
+
+        .device-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin-bottom: 60px;
+        }
+
+        /* CSS Device — Circular AI Hardware */
+        .device {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 50%, #151515 100%);
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.06),
+                inset 0 2px 4px rgba(255, 255, 255, 0.04),
+                0 40px 80px rgba(0, 0, 0, 0.8),
+                0 0 120px rgba(176, 196, 222, 0.08);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .device:hover {
+            transform: scale(1.03) rotateX(5deg);
+        }
+
+        /* Lens / AI Eye */
+        .device-lens {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 120px; height: 120px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at 40% 40%,
+                #2a3040 0%,
+                #151820 40%,
+                #0a0c10 70%,
+                #000000 100%
+            );
+            box-shadow:
+                0 0 0 3px rgba(176, 196, 222, 0.15),
+                0 0 0 6px rgba(255, 255, 255, 0.04),
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(176, 196, 222, 0.1);
+        }
+
+        .device-lens::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 50px; height: 50px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at 35% 35%,
+                rgba(176, 196, 222, 0.4) 0%,
+                rgba(100, 120, 160, 0.2) 30%,
+                transparent 60%
+            );
+            animation: lensFlare 4s ease-in-out infinite;
+        }
+
+        .device-lens::after {
+            content: '';
+            position: absolute;
+            top: 15%; left: 20%;
+            width: 20px; height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            filter: blur(4px);
+        }
+
+        /* Concentric Rings */
+        .device-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .device-ring:nth-child(2) {
+            width: 180px; height: 180px;
+            transform: translate(-50%, -50%);
+        }
+
+        .device-ring:nth-child(3) {
+            width: 240px; height: 240px;
+            transform: translate(-50%, -50%);
+            border-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .device-ring:nth-child(4) {
+            width: 300px; height: 300px;
+            transform: translate(-50%, -50%);
+            border-color: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Edge Highlight */
+        .device-highlight {
+            position: absolute;
+            inset: -1px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 200deg,
+                transparent 0%,
+                rgba(176, 196, 222, 0.3) 10%,
+                transparent 20%,
+                transparent 60%,
+                rgba(192, 192, 192, 0.15) 70%,
+                transparent 80%
+            );
+            mask: radial-gradient(
+                circle at center,
+                transparent 48%,
+                black 49%,
+                black 51%,
+                transparent 52%
+            );
+            -webkit-mask: radial-gradient(
+                circle at center,
+                transparent 48%,
+                black 49%,
+                black 51%,
+                transparent 52%
+            );
+        }
+
+        /* LED Indicator */
+        .device-led {
+            position: absolute;
+            top: 22%; right: 28%;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--cool-blue);
+            box-shadow: 0 0 10px var(--cool-blue), 0 0 20px rgba(176, 196, 222, 0.3);
+            animation: lensFlare 3s ease-in-out infinite;
+        }
+
+        /* Hero Text */
+        .hero-text {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-product-name {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--dim);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-size: 52px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--silver), var(--cool-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-tagline {
+            font-size: 18px;
+            color: var(--cool-gray);
+            max-width: 500px;
+            margin: 0 auto 48px;
+            line-height: 1.7;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: 40px;
+        }
+
+        .scroll-indicator span {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--faint);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .scroll-indicator .arrow {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--dim), transparent);
+            position: relative;
+        }
+
+        .scroll-indicator .arrow::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 50%;
+            width: 6px; height: 6px;
+            border-right: 1px solid var(--dim);
+            border-bottom: 1px solid var(--dim);
+            transform: translateX(-50%) rotate(45deg);
+            animation: scrollDown 2s ease-in-out infinite;
+        }
+
+        /* ===== Section 2: Typography as Image ===== */
+        .typography-section {
+            padding: 160px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .typo-word {
+            position: relative;
+            text-align: center;
+            margin-bottom: 80px;
+            cursor: default;
+        }
+
+        .typo-word:last-child { margin-bottom: 0; }
+
+        .typo-display {
+            font-size: clamp(72px, 12vw, 180px);
+            font-weight: 800;
+            letter-spacing: -4px;
+            line-height: 1;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.12);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .typo-word:hover .typo-display {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0);
+            background: linear-gradient(135deg, var(--white) 0%, var(--cool-blue) 50%, var(--silver) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transform: scale(1.02);
+            text-shadow: none;
+        }
+
+        .typo-desc {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: var(--faint);
+            letter-spacing: 2px;
+            margin-top: 16px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease 0.1s;
+        }
+
+        .typo-word:hover .typo-desc {
+            opacity: 1;
+            transform: translateY(0);
+            color: var(--dim);
+        }
+
+        /* Volumetric light for typo section */
+        .typography-section::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: -20%;
+            width: 600px; height: 600px;
+            background: radial-gradient(ellipse, rgba(176, 196, 222, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* ===== Section 3: Dark Mode Specs ===== */
+        .specs-section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .specs-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .specs-label {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--faint);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .specs-title {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            color: var(--white);
+        }
+
+        .specs-title span {
+            color: var(--cool-gray);
+        }
+
+        /* Spec Grid — Camera Spec Table Style */
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            border-top: 1px solid var(--border);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .spec-item {
+            padding: 32px 40px;
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            position: relative;
+            transition: background 0.4s;
+            cursor: default;
+        }
+
+        .spec-item:nth-child(even) { border-right: none; }
+
+        .spec-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 0; height: 1px;
+            background: linear-gradient(90deg, var(--cool-blue), transparent);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .spec-item:hover::before { width: 100%; }
+
+        .spec-item:hover {
+            background: rgba(176, 196, 222, 0.03);
+        }
+
+        .spec-icon {
+            width: 28px; height: 28px;
+            color: var(--faint);
+            margin-bottom: 14px;
+            transition: color 0.4s;
+        }
+
+        .spec-icon svg {
+            width: 100%; height: 100%;
+        }
+
+        .spec-item:hover .spec-icon { color: var(--cool-blue); }
+
+        .spec-label {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--faint);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .spec-value {
+            font-family: var(--font-mono);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--silver);
+            letter-spacing: -0.5px;
+        }
+
+        /* ===== Section 4: Features Grid ===== */
+        .features-section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .features-label {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--faint);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .features-title {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            color: var(--white);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--black);
+            padding: 48px 36px;
+            position: relative;
+            transition: background 0.4s;
+            cursor: default;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cool-blue), var(--silver));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .feature-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .feature-number {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--faint);
+            letter-spacing: 1px;
+        }
+
+        .feature-icon {
+            width: 36px; height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--faint);
+            transition: all 0.4s;
+        }
+
+        .feature-icon svg { width: 18px; height: 18px; }
+
+        .feature-card:hover .feature-icon {
+            color: var(--cool-blue);
+            border-color: rgba(176, 196, 222, 0.25);
+            box-shadow: 0 0 20px rgba(176, 196, 222, 0.08);
+        }
+
+        .feature-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .feature-desc {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            color: var(--dim);
+            line-height: 1.7;
+        }
+
+        /* ===== Section 5: Hardware Gallery ===== */
+        .gallery-section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .gallery-label {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--faint);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .gallery-title {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            color: var(--white);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .gallery-card {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: linear-gradient(145deg, #0a0a0a, #050505);
+            transition: border-color 0.4s;
+        }
+
+        .gallery-card:hover {
+            border-color: var(--border-hover);
+        }
+
+        /* Gallery Card 1 — Lens Detail */
+        .gallery-visual-1 {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-visual-1 .lens-macro {
+            width: 240px; height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at 40% 40%,
+                #1e2030 0%,
+                #10121a 50%,
+                #060608 100%
+            );
+            box-shadow:
+                0 0 0 2px rgba(176, 196, 222, 0.12),
+                0 0 0 8px rgba(255, 255, 255, 0.02),
+                0 0 0 20px rgba(176, 196, 222, 0.04),
+                inset 0 0 60px rgba(0, 0, 0, 0.8),
+                0 0 80px rgba(176, 196, 222, 0.08);
+            position: relative;
+        }
+
+        .gallery-visual-1 .lens-macro::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 80px; height: 80px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at 30% 30%,
+                rgba(176, 196, 222, 0.3) 0%,
+                rgba(100, 120, 160, 0.1) 40%,
+                transparent 70%
+            );
+        }
+
+        .gallery-visual-1 .lens-macro::after {
+            content: '108MP · AI VISION';
+            position: absolute;
+            bottom: -40px; left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--faint);
+            letter-spacing: 3px;
+            white-space: nowrap;
+        }
+
+        /* Gallery Card 2 — Side Profile */
+        .gallery-visual-2 {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-visual-2 .profile {
+            width: 280px; height: 28px;
+            background: linear-gradient(180deg,
+                rgba(40, 40, 45, 1) 0%,
+                rgba(20, 20, 22, 1) 40%,
+                rgba(10, 10, 12, 1) 100%
+            );
+            border-radius: 14px;
+            position: relative;
+            box-shadow:
+                0 1px 0 rgba(255, 255, 255, 0.08),
+                0 -1px 0 rgba(255, 255, 255, 0.02),
+                0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .gallery-visual-2 .profile::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 20%;
+            width: 60%; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(176, 196, 222, 0.4), transparent);
+        }
+
+        .gallery-visual-2 .profile::after {
+            content: 'Φ 45mm × 12mm';
+            position: absolute;
+            bottom: -40px; left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--faint);
+            letter-spacing: 3px;
+            white-space: nowrap;
+        }
+
+        .gallery-visual-2 .profile-led {
+            position: absolute;
+            top: 50%; right: 24px;
+            width: 4px; height: 4px;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            background: var(--cool-blue);
+            box-shadow: 0 0 8px var(--cool-blue);
+            animation: lensFlare 3s ease-in-out infinite;
+        }
+
+        .gallery-visual-2 .profile-port {
+            position: absolute;
+            top: 50%; left: 20px;
+            width: 12px; height: 6px;
+            transform: translateY(-50%);
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gallery-card-label {
+            position: absolute;
+            bottom: 24px; left: 24px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--faint);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ===== Section 6: CTA ===== */
+        .cta-section {
+            padding: 160px 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 600px; height: 600px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(
+                circle at center,
+                rgba(176, 196, 222, 0.06) 0%,
+                transparent 60%
+            );
+            pointer-events: none;
+        }
+
+        .cta-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--faint);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .cta-title {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            color: var(--white);
+        }
+
+        .cta-title span {
+            background: linear-gradient(135deg, var(--silver), var(--cool-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-desc {
+            font-size: 17px;
+            color: var(--dim);
+            max-width: 480px;
+            margin: 0 auto 48px;
+            line-height: 1.7;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--black);
+            background: var(--white);
+            padding: 18px 48px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, var(--cool-blue), var(--silver), var(--white));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .cta-btn:hover {
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.15), 0 0 80px rgba(176, 196, 222, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .cta-btn svg {
+            width: 18px; height: 18px;
+            transition: transform 0.3s;
+        }
+
+        .cta-btn:hover svg { transform: translateX(4px); }
+
+        .cta-meta {
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .cta-meta-item {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--faint);
+            letter-spacing: 1px;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-brand {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dim);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .footer-copy {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--faint);
+            letter-spacing: 1px;
+        }
+
+        /* ===== Scroll Reveal ===== */
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-stagger > * {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal-stagger.active > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-stagger.active > *:nth-child(1)  { transition-delay: .05s; }
+        .js .reveal-stagger.active > *:nth-child(2)  { transition-delay: .10s; }
+        .js .reveal-stagger.active > *:nth-child(3)  { transition-delay: .15s; }
+        .js .reveal-stagger.active > *:nth-child(4)  { transition-delay: .20s; }
+        .js .reveal-stagger.active > *:nth-child(5)  { transition-delay: .25s; }
+        .js .reveal-stagger.active > *:nth-child(6)  { transition-delay: .30s; }
+        .js .reveal-stagger.active > *:nth-child(7)  { transition-delay: .35s; }
+        .js .reveal-stagger.active > *:nth-child(8)  { transition-delay: .40s; }
+        .js .reveal-stagger.active > *:nth-child(9)  { transition-delay: .45s; }
+        .js .reveal-stagger.active > *:nth-child(10) { transition-delay: .50s; }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 1024px) {
+            .hero-title { font-size: 42px; }
+            .typo-display { -webkit-text-stroke-width: 0.5px; }
+            .spec-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .gallery-grid { gap: 16px; }
+            .specs-title, .features-title, .gallery-title { font-size: 34px; }
+            .cta-title { font-size: 38px; }
+        }
+
+        /* ============================================
+           Hamburger Menu Toggle
+           ============================================ */
+        .navbar-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .navbar-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 0;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+            }
+            .navbar-toggle { display: flex; color: rgba(255, 255, 255, 0.7); }
+            .navbar > .container, .navbar > div { flex-wrap: wrap; }
+            .navbar-links {
+                display: none;
+                order: 99;
+                flex-basis: 100%;
+                flex-direction: column;
+                padding: 12px 0 4px;
+                gap: 0;
+            }
+            .navbar-links a {
+                display: block;
+                padding: 12px 0;
+                font-size: 15px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            }
+            .navbar-links li { list-style: none; }
+            .navbar-links li:last-child a { border-bottom: none; }
+            .navbar.menu-open .navbar-links { display: flex; }
+            .navbar-cta {
+                display: none;
+            }
+            .navbar.menu-open .navbar-cta {
+                display: block;
+                order: 100;
+                flex-basis: 100%;
+                text-align: center;
+                padding: 10px;
+                margin-top: 4px;
+            }
+
+            .hero { min-height: auto; padding: 140px 0 80px; }
+            .hero-title { font-size: 32px; letter-spacing: -1px; }
+            .hero-tagline { font-size: 15px; }
+            .device-container { width: 220px; height: 220px; }
+            .device-lens { width: 80px; height: 80px; }
+            .device-lens::before { width: 35px; height: 35px; }
+            .device-ring:nth-child(2) { width: 120px; height: 120px; }
+            .device-ring:nth-child(3) { width: 160px; height: 160px; }
+            .device-ring:nth-child(4) { width: 200px; height: 200px; }
+
+            .typography-section { padding: 100px 0; }
+            .typo-word { margin-bottom: 50px; }
+
+            .spec-grid { grid-template-columns: 1fr; }
+            .spec-item { border-right: none; }
+
+            .features-grid { grid-template-columns: 1fr; }
+
+            .gallery-grid { grid-template-columns: 1fr; }
+
+            .specs-title, .features-title, .gallery-title { font-size: 28px; }
+            .cta-title { font-size: 28px; }
+            .cta-meta { flex-direction: column; gap: 12px; }
+            .footer .container { flex-direction: column; gap: 16px; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 26px; }
+            .cta-btn { padding: 16px 32px; font-size: 12px; }
+        }
+    </style>
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+    <!-- ===== Navbar ===== -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="#" class="navbar-brand">Nexus</a>
+            <button class="navbar-toggle" aria-label="菜单" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="navbar-links">
+                <li><a href="#specs">规格</a></li>
+                <li><a href="#features">功能</a></li>
+                <li><a href="#gallery">设计</a></li>
+                <li><a href="#cta" class="navbar-cta">Pre-Order</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== Hero — Macro Close-up ===== -->
+    <section class="hero" id="hero">
+        <div class="hero-volumetric" aria-hidden="true"></div>
+
+        <div class="hero-product">
+            <!-- CSS 3D Device -->
+            <div class="device-container reveal" id="deviceContainer">
+                <div class="device">
+                    <div class="device-highlight"></div>
+                    <div class="device-lens"></div>
+                    <div class="device-ring"></div>
+                    <div class="device-ring"></div>
+                    <div class="device-ring"></div>
+                    <div class="device-led"></div>
+                </div>
+            </div>
+
+            <!-- Hero Text -->
+            <div class="hero-text reveal">
+                <div class="hero-product-name">Nexus AI Device</div>
+                <h1 class="hero-title">
+                    看见未曾看见的<br><span>精密智能体</span>
+                </h1>
+                <p class="hero-tagline">
+                    Neural Engine X1 驱动，108MP AI 视觉系统，亚 50ms 响应。
+                    将 AI 的力量凝缩于 42g 精密仪器之中。
+                </p>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="scroll-indicator">
+                <span>Scroll</span>
+                <div class="arrow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Typography as Image ===== -->
+    <section class="typography-section">
+        <div class="container">
+            <div class="typo-word reveal">
+                <div class="typo-display">UNSEEN</div>
+                <div class="typo-desc">超越视觉极限 · Beyond visible spectrum</div>
+            </div>
+            <div class="typo-word reveal">
+                <div class="typo-display">PRECISION</div>
+                <div class="typo-desc">纳米级精密工艺 · Nanoscale craftsmanship</div>
+            </div>
+            <div class="typo-word reveal">
+                <div class="typo-display">INTELLIGENCE</div>
+                <div class="typo-desc">自主推理决策 · Autonomous reasoning</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Dark Mode Specs ===== -->
+    <section class="specs-section" id="specs">
+        <div class="container">
+            <div class="specs-header reveal">
+                <div class="specs-label">Technical Specifications</div>
+                <h2 class="specs-title">精密参数 <span>· 每一项都极致</span></h2>
+            </div>
+
+            <div class="spec-grid reveal-stagger">
+                <div class="spec-item">
+                    <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg></div>
+                    <div class="spec-label">Processor</div>
+                    <div class="spec-value">Neural Engine X1</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+                    <div class="spec-label">Compute Power</div>
+                    <div class="spec-value">40 TOPS</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                    <div class="spec-label">Latency</div>
+                    <div class="spec-value">&lt; 50ms</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg></div>
+                    <div class="spec-label">Power Consumption</div>
+                    <div class="spec-value">5W typical</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
+                    <div class="spec-label">Sensors</div>
+                    <div class="spec-value">108MP + LiDAR</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg></div>
+                    <div class="spec-label">Connectivity</div>
+                    <div class="spec-value">Wi-Fi 7 + 5G</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2"/><path d="M23 13v-2"/></svg></div>
+                    <div class="spec-label">Battery Life</div>
+                    <div class="spec-value">Up to 24h</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                    <div class="spec-label">Storage</div>
+                    <div class="spec-value">256GB + Cloud</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3H3v7h18V3z"/><path d="M21 14H3v7h18v-7z"/><line x1="12" y1="3" x2="12" y2="10"/><line x1="12" y1="14" x2="12" y2="21"/><line x1="3" y1="7" x2="21" y2="7"/></svg></div>
+                    <div class="spec-label">Dimensions</div>
+                    <div class="spec-value">Φ 45mm × 12mm</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg></div>
+                    <div class="spec-label">Weight</div>
+                    <div class="spec-value">42g</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Features Grid ===== -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="features-header reveal">
+                <div class="features-label">Core Capabilities</div>
+                <h2 class="features-title">六大核心能力</h2>
+            </div>
+
+            <div class="features-grid reveal-stagger">
+                <div class="feature-card">
+                    <div class="feature-top">
+                        <div class="feature-number">01</div>
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93"/><path d="M8 6a4 4 0 0 1 3.25-3.93"/><circle cx="12" cy="14" r="4"/><path d="M3.34 17a10 10 0 0 1 2.08-2.08"/><path d="M18.58 14.92A10 10 0 0 1 20.66 17"/><path d="M12 18v4"/><path d="M8 22h8"/></svg>
+                        </div>
+                    </div>
+                    <div class="feature-name">Neural Processing</div>
+                    <div class="feature-desc">Advanced AI chip delivers 40 TOPS of compute power for real-time inference</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-top">
+                        <div class="feature-number">02</div>
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        </div>
+                    </div>
+                    <div class="feature-name">Ultra-Low Latency</div>
+                    <div class="feature-desc">Sub-50ms response time for instant interactions and seamless experience</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-top">
+                        <div class="feature-number">03</div>
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                        </div>
+                    </div>
+                    <div class="feature-name">Precision Sensors</div>
+                    <div class="feature-desc">108MP camera with LiDAR for depth perception and spatial awareness</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-top">
+                        <div class="feature-number">04</div>
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="18" height="12" rx="2"/><path d="M23 13v-2"/><path d="M11 10l-3 3 3 3"/><path d="M7 13h5"/></svg>
+                        </div>
+                    </div>
+                    <div class="feature-name">All-Day Battery</div>
+                    <div class="feature-desc">24-hour battery life with intelligent power management and fast charging</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-top">
+                        <div class="feature-number">05</div>
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+                        </div>
+                    </div>
+                    <div class="feature-name">Cloud Integration</div>
+                    <div class="feature-desc">Seamless sync with cloud storage, edge computing and hybrid inference</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-top">
+                        <div class="feature-number">06</div>
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        </div>
+                    </div>
+                    <div class="feature-name">Always On</div>
+                    <div class="feature-desc">Voice-activated ambient computing, always ready to assist and learn</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Hardware Gallery ===== -->
+    <section class="gallery-section" id="gallery">
+        <div class="container">
+            <div class="gallery-header reveal">
+                <div class="gallery-label">Design Details</div>
+                <h2 class="gallery-title">每一处细节，皆是考究</h2>
+            </div>
+
+            <div class="gallery-grid reveal-stagger">
+                <!-- Card 1: Lens Detail -->
+                <div class="gallery-card">
+                    <div class="gallery-visual-1">
+                        <div class="lens-macro"></div>
+                    </div>
+                    <div class="gallery-card-label">AI Vision System</div>
+                </div>
+
+                <!-- Card 2: Side Profile -->
+                <div class="gallery-card">
+                    <div class="gallery-visual-2">
+                        <div class="profile">
+                            <div class="profile-led"></div>
+                            <div class="profile-port"></div>
+                        </div>
+                    </div>
+                    <div class="gallery-card-label">Industrial Design</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA Section ===== -->
+    <section class="cta-section" id="cta">
+        <div class="container reveal">
+            <div class="cta-eyebrow">Available Spring 2026</div>
+            <h2 class="cta-title">准备好拥有 <span>未来</span> 了吗</h2>
+            <p class="cta-desc">限量首发 1,000 台，每一台都有独立编号。加入等候名单，成为第一批体验者。</p>
+            <a href="#" class="cta-btn">
+                加入等候名单
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            <div class="cta-meta">
+                <div class="cta-meta-item">免费加入 · 无需付款</div>
+                <div class="cta-meta-item">全球包邮</div>
+                <div class="cta-meta-item">1 年质保</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-brand">Nexus</div>
+            <p class="footer-copy">&copy; 2026 Nexus Technologies. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ===== JavaScript ===== -->
+    <script>
+        // Hamburger 菜单切换
+        const navToggle = document.querySelector('.navbar-toggle, .nav-toggle');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navToggle.closest('nav').classList.toggle('menu-open');
+                navToggle.setAttribute('aria-expanded',
+                    navToggle.closest('nav').classList.contains('menu-open'));
+            });
+            navToggle.closest('nav').querySelectorAll('.navbar-links a, .nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.closest('nav').classList.remove('menu-open');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        // ========================================
+        // 1. Navbar Scroll
+        // ========================================
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // ========================================
+        // 2. Scroll Reveal
+        // ========================================
+        const revealObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('active');
+                    revealObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+        document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => revealObs.observe(el));
+
+        // ========================================
+        // 3. Smooth Scroll
+        // ========================================
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                e.preventDefault();
+                const t = document.querySelector(href);
+                if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // ========================================
+        // 4. Parallax — Device & Typography
+        // ========================================
+        const device = document.getElementById('deviceContainer');
+        let ticking = false;
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    const vh = window.innerHeight;
+
+                    // Device subtle rotation on scroll
+                    if (device && scrollY < vh * 1.5) {
+                        const progress = scrollY / vh;
+                        const rotateX = progress * 15;
+                        const rotateZ = progress * 5;
+                        const scale = 1 - progress * 0.15;
+                        device.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateZ(${rotateZ}deg) scale(${Math.max(scale, 0.7)})`;
+                        device.style.opacity = Math.max(1 - progress * 0.8, 0.2);
+                    }
+
+                    // Typography parallax
+                    document.querySelectorAll('.typo-display').forEach((el, i) => {
+                        const rect = el.getBoundingClientRect();
+                        const inView = rect.top < vh && rect.bottom > 0;
+                        if (inView) {
+                            const center = (rect.top + rect.height / 2 - vh / 2) / vh;
+                            const offset = center * (i % 2 === 0 ? -30 : 30);
+                            el.style.transform = `translateX(${offset}px)`;
+                        }
+                    });
+
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // ========================================
+        // 5. Spec Items — Counter animation
+        // ========================================
+        const specObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.animation = 'fadeInUp 0.6s cubic-bezier(0.16,1,0.3,1) forwards';
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.spec-item').forEach(el => specObs.observe(el));
+    </script>
+</body>
+</html>

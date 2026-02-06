@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORIGIN BREW | 寻味本源</title>
+    <style>
+        /* ===== CSS Reset & Base Styles ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary Colors - 故事讲述型极简配色 */
+            --primary-dark: #2d2d2d;
+            --primary-blue: #2b6cb0;
+            
+            /* Background Colors */
+            --white: #ffffff;
+            --light-bg: #f7f9fc;
+            --cta-bg: #1a1a1a;
+            --footer-bg: #111111;
+            
+            /* Text Colors */
+            --text-dark: #2d2d2d;
+            --text-medium: #666666;
+            --text-light: #999999;
+            --text-white: #ffffff;
+            
+            /* Shadows - 极简柔和阴影 */
+            --shadow-subtle: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-card: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-card-hover: 0 12px 32px rgba(0,0,0,0.12);
+            
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            
+            /* Spacing */
+            --section-padding: 120px 0;
+            --container-max-width: 1200px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== Container ===== */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ============================================
+           Navbar - 极简风格
+           ============================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 1px 12px rgba(0, 0, 0, 0.06);
+            padding: 14px 0;
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .navbar-links a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-links a:hover { color: var(--text-dark); }
+
+        .navbar-cta {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-white) !important;
+            text-decoration: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            background: var(--primary-dark);
+            border: 2px solid var(--primary-dark);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-cta:hover {
+            background: transparent;
+            color: var(--primary-dark);
+        }
+
+        /* ===== Hero Section - 白色背景，居中对齐 ===== */
+        .hero {
+            min-height: 100vh;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 0;
+        }
+
+        .hero .container {
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero-title {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-tagline {
+            font-size: 24px;
+            color: var(--text-medium);
+            margin-bottom: 40px;
+            font-weight: 400;
+            line-height: 1.5;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--primary-dark);
+            color: var(--text-white);
+            padding: 18px 40px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid var(--primary-dark);
+            transition: all 0.3s ease;
+            margin-bottom: 60px;
+        }
+
+        .hero-cta:hover {
+            background: transparent;
+            color: var(--primary-dark);
+        }
+
+        .hero-cta svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-cta:hover svg {
+            transform: translateX(4px);
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow-card);
+        }
+
+        /* ===== Story Section - 品牌故事 ===== */
+        .story {
+            padding: var(--section-padding);
+            background: var(--white);
+        }
+
+        .story .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .story-content {
+            max-width: 500px;
+        }
+
+        .story-label {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+
+        .story-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .story-text {
+            font-size: 18px;
+            color: var(--text-medium);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .story-text:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .story-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        /* ===== Features Section - 数字卡片网格 ===== */
+        .features {
+            padding: var(--section-padding);
+            background: var(--light-bg);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 72px;
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 40px 32px;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .feature-number {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--text-dark);
+            opacity: 0.16;
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-description {
+            font-size: 16px;
+            color: var(--text-medium);
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== Mission Section - 使命愿景 ===== */
+        .mission {
+            padding: var(--section-padding);
+            background: var(--white);
+        }
+
+        .mission .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .mission-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .mission-content {
+            max-width: 500px;
+        }
+
+        .mission-quote {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.4;
+            margin-bottom: 32px;
+            letter-spacing: -0.02em;
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .mission-quote::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary-dark);
+            border-radius: 2px;
+        }
+
+        .mission-text {
+            font-size: 18px;
+            color: var(--text-medium);
+            line-height: 1.8;
+        }
+
+        /* ===== Testimonials Section ===== */
+        .testimonials {
+            padding: var(--section-padding);
+            background: var(--light-bg);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .testimonial-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 36px;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card);
+        }
+
+        .testimonial-quote {
+            font-size: 17px;
+            color: var(--text-medium);
+            line-height: 1.8;
+            margin-bottom: 28px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .testimonial-avatar-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--light-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--text-medium);
+        }
+
+        .testimonial-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .testimonial-info p {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* ===== CTA Section - 深色背景 ===== */
+        .cta {
+            padding: 100px 0;
+            background: var(--cta-bg);
+        }
+
+        .cta .container {
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 48px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--text-white);
+            color: var(--cta-bg);
+            padding: 20px 48px;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid var(--text-white);
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background: transparent;
+            color: var(--text-white);
+        }
+
+        .cta-btn svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-btn:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* ===== Footer - 深色背景 ===== */
+        .footer {
+            background: var(--footer-bg);
+            padding: 48px 0;
+        }
+
+        .footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-brand {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-white);
+            letter-spacing: -0.02em;
+        }
+
+        .footer-copyright {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 56px;
+            }
+
+            .story .container,
+            .mission .container {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .story-content,
+            .mission-content {
+                max-width: none;
+                order: 1;
+            }
+
+            .story-image,
+            .mission-image {
+                order: 0;
+                height: 400px;
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 42px;
+            }
+
+            .hero-tagline {
+                font-size: 20px;
+            }
+
+            .section-title,
+            .story-title {
+                font-size: 32px;
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mission-quote {
+                font-size: 24px;
+            }
+
+            .cta-title {
+                font-size: 36px;
+            }
+
+            .footer .container {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .hero-cta {
+                padding: 16px 32px;
+            }
+
+            .story-image,
+            .mission-image {
+                height: 280px;
+            }
+        }
+        /* ============================================
+           Scroll Reveal
+           ============================================ */
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children > * {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal-children.active > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children.active > *:nth-child(1) { transition-delay: 0.05s; }
+        .js .reveal-children.active > *:nth-child(2) { transition-delay: 0.1s; }
+        .js .reveal-children.active > *:nth-child(3) { transition-delay: 0.15s; }
+        .js .reveal-children.active > *:nth-child(4) { transition-delay: 0.2s; }
+        .js .reveal-children.active > *:nth-child(5) { transition-delay: 0.25s; }
+        .js .reveal-children.active > *:nth-child(6) { transition-delay: 0.3s; }
+
+        /* ============================================
+           Hero Subtle Decoration - 极简线条
+           ============================================ */
+        .hero-line {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .hero-line-1 {
+            width: 1px;
+            height: 120px;
+            background: linear-gradient(to bottom, transparent, rgba(45, 45, 45, 0.1), transparent);
+            left: 10%;
+            top: 15%;
+            animation: line-fade 8s ease-in-out infinite;
+        }
+
+        .hero-line-2 {
+            width: 1px;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent, rgba(45, 45, 45, 0.08), transparent);
+            right: 12%;
+            bottom: 20%;
+            animation: line-fade 10s ease-in-out infinite 3s;
+        }
+
+        @keyframes line-fade {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* ============================================
+           Image Placeholder
+           ============================================ */
+        .hero-image, .story-image, .mission-image {
+            background: linear-gradient(135deg, #f0f2f5, #e4e7eb);
+        }
+
+        /* ============================================
+           Hamburger Menu Toggle
+           ============================================ */
+        .navbar-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .navbar-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        @media (max-width: 768px) {
+            .navbar-toggle { display: flex; color: inherit; }
+            .navbar > .container, .navbar > div { flex-wrap: wrap; }
+            .navbar-links {
+                display: none;
+                order: 99;
+                flex-basis: 100%;
+                flex-direction: column;
+                padding: 12px 0 4px;
+                gap: 0;
+            }
+            .navbar-links a {
+                display: block;
+                padding: 12px 0;
+                font-size: 15px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            }
+            .navbar-links li { list-style: none; }
+            .navbar-links li:last-child a { border-bottom: none; }
+            .navbar.menu-open .navbar-links { display: flex; }
+            .navbar-cta {
+                margin-top: 8px;
+                display: block;
+                text-align: center;
+                border-radius: 50px;
+                font-size: 13px;
+                padding: 8px 20px;
+            }
+            .hero-line { display: none; }
+        }
+    </style>
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar scrolled">
+        <div class="container">
+            <a href="#" class="navbar-brand">ORIGIN BREW</a>
+            <button class="navbar-toggle" aria-label="菜单" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="navbar-links">
+                <li><a href="#story">我们的故事</a></li>
+                <li><a href="#features">核心价值</a></li>
+                <li><a href="#testimonials">评价</a></li>
+                <li><a href="#cta" class="navbar-cta">开启品鉴之旅</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== Hero Section ===== -->
+    <section class="hero">
+        <div class="hero-line hero-line-1"></div>
+        <div class="hero-line hero-line-2"></div>
+        <div class="container">
+            <h1 class="hero-title">ORIGIN BREW</h1>
+            <p class="hero-tagline">
+                每一杯咖啡，都是一段旅程的起点。<br>
+                我们寻访世界各地的咖啡庄园，只为带给你最纯粹的风味。
+            </p>
+            <a href="#cta" class="hero-cta">
+                开启品鉴之旅
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            <img src="" alt="Origin Brew 精品咖啡" class="hero-image" data-slot="hero" data-size="1200x600">
+        </div>
+    </section>
+
+    <!-- ===== Story Section - 品牌起源 ===== -->
+    <section class="story" id="story">
+        <div class="container">
+            <div class="story-content reveal">
+                <span class="story-label">我们的故事</span>
+                <h2 class="story-title">从云南到埃塞俄比亚，<br>一场关于风味的溯源</h2>
+                <p class="story-text">
+                    2018年的一次云南之行，改变了一切。在普洱的深山里，我们第一次品尝到了阳光、土壤和时间共同酝酿的风味——那种纯粹而复杂的味道，让我们决定放下一切，踏上寻找完美咖啡的旅程。
+                </p>
+                <p class="story-text">
+                    从云南到埃塞俄比亚，从哥伦比亚到肯尼亚，我们走访了二十多个咖啡产地，与当地的农人建立深厚的联结，只为带回那些真正值得被记住的风味。
+                </p>
+            </div>
+            <img src="" alt="咖啡庄园" class="story-image" data-slot="story" data-size="600x400">
+        </div>
+    </section>
+
+    <!-- ===== Features Section - 核心价值 ===== -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">为什么选择我们</h2>
+                <p class="section-subtitle">
+                    我们相信，好咖啡不只是一种饮品，更是一种生活态度
+                </p>
+            </div>
+            <div class="features-grid reveal-children">
+                <div class="feature-card">
+                    <span class="feature-number">01</span>
+                    <h3 class="feature-title">产地直采</h3>
+                    <p class="feature-description">
+                        绕过中间商，与全球20+产地的咖啡农直接合作，确保每一颗豆子都可追溯到源头。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-number">02</span>
+                    <h3 class="feature-title">精准烘焙</h3>
+                    <p class="feature-description">
+                        基于每批生豆的特性定制烘焙曲线，用数据和经验的结合，释放咖啡的最佳风味。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-number">03</span>
+                    <h3 class="feature-title">新鲜直达</h3>
+                    <p class="feature-description">
+                        烘焙后48小时内发货，冷链全程保鲜，让你品尝到咖啡最佳赏味期的风味。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-number">04</span>
+                    <h3 class="feature-title">可持续发展</h3>
+                    <p class="feature-description">
+                        支付高于市场30%的公平价格，同时资助产地社区的教育和环保项目。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-number">05</span>
+                    <h3 class="feature-title">专业指导</h3>
+                    <p class="feature-description">
+                        每款咖啡附带详细的冲煮指南，并提供一对一咖啡顾问服务，帮你找到专属风味。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-number">06</span>
+                    <h3 class="feature-title">会员体系</h3>
+                    <p class="feature-description">
+                        订阅会员每月收到精选豆款，享受专属折扣和限量版咖啡优先购买权。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Mission Section - 使命愿景 ===== -->
+    <section class="mission">
+        <div class="container">
+            <img src="" alt="咖啡制作" class="mission-image" data-slot="story" data-size="600x400">
+            <div class="mission-content reveal">
+                <span class="story-label">我们的使命</span>
+                <p class="mission-quote">
+                    "让每一杯咖啡都成为连接人与土地、传统与创新的桥梁。"
+                </p>
+                <p class="mission-text">
+                    我们不仅仅是在销售咖啡，我们在分享一种生活方式。每一颗咖啡豆背后，都有一个农人家庭的故事，一片土地的记忆，一种文化的传承。通过Origin Brew，我们希望让更多人理解并珍视这杯咖啡的来之不易。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Testimonials Section ===== -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">来自咖啡爱好者的声音</h2>
+                <p class="section-subtitle">
+                    超过10,000位咖啡爱好者的信赖之选
+                </p>
+            </div>
+            <div class="testimonials-grid reveal-children">
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">
+                        "第一次喝到他们家的耶加雪菲，那种花香和柑橘的层次感让我重新定义了什么是好咖啡。现在已经是订阅会员两年了。"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar-placeholder">陈</div>
+                        <div class="testimonial-info">
+                            <h4>陈思远</h4>
+                            <p>咖啡师 / 上海</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">
+                        "最打动我的是他们的可持续理念。知道自己喝的每一杯咖啡都在帮助产地的农人改善生活，这种感觉很好。"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar-placeholder">林</div>
+                        <div class="testimonial-info">
+                            <h4>林雨桐</h4>
+                            <p>设计师 / 北京</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-quote">
+                        "作为一个在家办公的人，Origin Brew的咖啡已经成为我每天开启工作的仪式。新鲜度和风味都无可挑剔。"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar-placeholder">王</div>
+                        <div class="testimonial-info">
+                            <h4>王浩然</h4>
+                            <p>自由撰稿人 / 杭州</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA Section ===== -->
+    <section class="cta" id="cta">
+        <div class="container reveal">
+            <h2 class="cta-title">开始你的咖啡之旅</h2>
+            <p class="cta-subtitle">
+                加入我们，探索来自世界各地的精品咖啡，<br>发现属于你的风味。
+            </p>
+            <a href="#" class="cta-btn">
+                立即探索
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-brand">ORIGIN BREW</div>
+            <p class="footer-copyright">© 2026 Origin Brew. 寻味本源，品味生活。</p>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger 菜单切换
+        const navToggle = document.querySelector('.navbar-toggle, .nav-toggle');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navToggle.closest('nav').classList.toggle('menu-open');
+                navToggle.setAttribute('aria-expanded',
+                    navToggle.closest('nav').classList.contains('menu-open'));
+            });
+            navToggle.closest('nav').querySelectorAll('.navbar-links a, .nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.closest('nav').classList.remove('menu-open');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        // Navbar 滚动效果
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.pageYOffset > 60);
+        });
+
+        // Scroll Reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+        document.querySelectorAll('.reveal, .reveal-children').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>

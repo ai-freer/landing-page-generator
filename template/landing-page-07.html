@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataFlow 数据流 | 让数据驱动每一个决策</title>
+    <style>
+        /* ===== CSS Reset & Base Styles ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Color Blocks */
+            --blue-light: #e8f4ff;
+            --blue-lighter: #f5faff;
+            --green-light: #e8fff0;
+            --green-lighter: #f0fff7;
+            --white: #ffffff;
+            --dark: #1a1a1a;
+            --dark-secondary: #2d2d2d;
+
+            /* Primary - Purple Gradient */
+            --purple-start: #667eea;
+            --purple-end: #764ba2;
+            --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+            /* Accent Colors */
+            --accent-blue: #4facfe;
+            --accent-indigo: #667eea;
+            --accent-violet: #764ba2;
+            --accent-green: #38b2ac;
+            --accent-teal: #43e97b;
+
+            /* Text */
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-tertiary: #718096;
+            --text-light: #a0aec0;
+            --text-white: #ffffff;
+            --text-on-dark: #e2e8f0;
+
+            /* Backgrounds */
+            --bg-hero: linear-gradient(180deg, #e8f4ff 0%, #f5faff 100%);
+            --bg-features: linear-gradient(180deg, #e8f4ff 0%, #f0f7ff 100%);
+            --bg-testimonials: linear-gradient(180deg, #e8fff0 0%, #f0fff7 100%);
+            --bg-cta: linear-gradient(180deg, #e8fff0 0%, #f0fff7 100%);
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
+            --shadow-card: 0 4px 24px rgba(102, 126, 234, 0.08);
+            --shadow-card-hover: 0 12px 40px rgba(102, 126, 234, 0.15);
+
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif;
+
+            /* Spacing */
+            --section-padding: 120px 0;
+            --container-max-width: 1200px;
+
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== Container ===== */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(36px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ===== Navigation ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 18px 0;
+            background: rgba(232, 244, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(102, 126, 234, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .nav.scrolled {
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-brand svg {
+            width: 34px;
+            height: 34px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-indigo);
+        }
+
+        .nav-cta {
+            background: var(--gradient-purple) !important;
+            color: var(--text-white) !important;
+            padding: 10px 28px;
+            border-radius: var(--radius-full);
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 24px rgba(102, 126, 234, 0.4) !important;
+        }
+
+        /* ===== Hero Section - Split Layout ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: var(--bg-hero);
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative background shapes */
+        .hero-deco-1 {
+            position: absolute;
+            top: 15%;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-deco-2 {
+            position: absolute;
+            bottom: 10%;
+            right: -80px;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(118, 75, 162, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-deco-3 {
+            position: absolute;
+            top: 40%;
+            right: 25%;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-indigo);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .hero-deco-4 {
+            position: absolute;
+            top: 25%;
+            left: 15%;
+            width: 6px;
+            height: 6px;
+            background: var(--accent-violet);
+            border-radius: 50%;
+            opacity: 0.25;
+            animation: pulse 4s ease-in-out infinite 1s;
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            animation: fadeInLeft 0.8s ease-out;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.15);
+            color: var(--accent-indigo);
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 28px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+            color: var(--text-primary);
+        }
+
+        .hero-title .gradient-text {
+            background: var(--gradient-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.8;
+            max-width: 480px;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gradient-purple);
+            color: var(--text-white);
+            padding: 16px 36px;
+            border-radius: var(--radius-full);
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 24px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 36px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary:hover svg {
+            transform: translateX(3px);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--white);
+            color: var(--text-primary);
+            padding: 15px 32px;
+            border-radius: var(--radius-full);
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1.5px solid rgba(102, 126, 234, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-indigo);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .hero-trust {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .hero-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+
+        .hero-trust-item svg {
+            width: 16px;
+            height: 16px;
+            color: var(--accent-green);
+        }
+
+        .hero-image {
+            position: relative;
+            animation: fadeInRight 0.8s ease-out 0.2s both;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.06), rgba(118, 75, 162, 0.06));
+        }
+
+        /* Floating glass badges on hero image */
+        .hero-float-badge {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(20px) saturate(1.4);
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 14px;
+            padding: 12px 16px;
+            box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.10),
+                0 12px 40px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2;
+        }
+
+        .hero-float-badge-1 {
+            bottom: 36px;
+            left: -24px;
+            animation: floatGlass1 7s ease-in-out infinite;
+        }
+
+        .hero-float-badge-2 {
+            top: 20px;
+            right: -16px;
+            animation: floatGlass2 8s ease-in-out infinite 2s;
+        }
+
+        @keyframes floatGlass1 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            30% { transform: translateY(-8px) rotate(-0.5deg); }
+            70% { transform: translateY(4px) rotate(0.3deg); }
+        }
+
+        @keyframes floatGlass2 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            40% { transform: translateY(-6px) rotate(0.5deg); }
+            60% { transform: translateY(3px) rotate(-0.3deg); }
+        }
+
+        .hero-float-badge .badge-icon {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-float-badge .badge-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .hero-float-badge-1 .badge-icon svg {
+            color: #2dbe6a;
+        }
+
+        .hero-float-badge-2 .badge-icon svg {
+            color: #667eea;
+        }
+
+        .hero-float-badge .badge-text {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .hero-float-badge .badge-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.15;
+            letter-spacing: -0.3px;
+        }
+
+        .hero-float-badge .badge-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            letter-spacing: 0.1px;
+        }
+
+        /* ===== Zig-Zag Flow Section (White Background) ===== */
+        .zigzag {
+            padding: var(--section-padding);
+            background: var(--white);
+            position: relative;
+        }
+
+        .zigzag-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            margin-bottom: 120px;
+        }
+
+        .zigzag-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .zigzag-section.reverse .zigzag-content {
+            order: 2;
+        }
+
+        .zigzag-section.reverse .zigzag-image {
+            order: 1;
+        }
+
+        .zigzag-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            padding: 6px 16px;
+            border-radius: var(--radius-full);
+        }
+
+        .zigzag-label.blue {
+            color: var(--accent-indigo);
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .zigzag-label.purple {
+            color: var(--accent-violet);
+            background: rgba(118, 75, 162, 0.1);
+        }
+
+        .zigzag-label.green {
+            color: var(--accent-green);
+            background: rgba(56, 178, 172, 0.1);
+        }
+
+        .zigzag-title {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+        }
+
+        .zigzag-description {
+            font-size: 17px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+
+        .zigzag-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .zigzag-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .zigzag-features li svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .zigzag-features li .check-blue { color: var(--accent-indigo); }
+        .zigzag-features li .check-purple { color: var(--accent-violet); }
+        .zigzag-features li .check-green { color: var(--accent-green); }
+
+        .zigzag-image {
+            position: relative;
+        }
+
+        .zigzag-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.4s ease;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.04), rgba(118, 75, 162, 0.04));
+        }
+
+        .zigzag-image:hover img {
+            transform: scale(1.02);
+        }
+
+        /* Decorative element behind zigzag images */
+        .zigzag-image::before {
+            content: '';
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: -1;
+            filter: blur(4px);
+        }
+
+        .zigzag-section:nth-child(1) .zigzag-image::before {
+            top: -30px;
+            right: -30px;
+            background: var(--accent-indigo);
+        }
+
+        .zigzag-section:nth-child(2) .zigzag-image::before {
+            bottom: -30px;
+            left: -30px;
+            background: var(--accent-violet);
+        }
+
+        .zigzag-section:nth-child(3) .zigzag-image::before {
+            top: -30px;
+            left: -30px;
+            background: var(--accent-green);
+        }
+
+        /* ===== Feature Grid Section (Light Blue Background) ===== */
+        .features {
+            padding: var(--section-padding);
+            background: var(--bg-features);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: -150px;
+            right: -150px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .features::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(118, 75, 162, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 72px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-eyebrow {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-indigo);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 44px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 540px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 36px 28px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(102, 126, 234, 0.05);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-purple);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-card-hover);
+            border-color: transparent;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-white);
+        }
+
+        .feature-card:nth-child(1) .feature-number,
+        .feature-card:nth-child(4) .feature-number {
+            background: linear-gradient(135deg, #667eea, #6c82f0);
+        }
+
+        .feature-card:nth-child(2) .feature-number,
+        .feature-card:nth-child(5) .feature-number {
+            background: linear-gradient(135deg, #764ba2, #8058b4);
+        }
+
+        .feature-card:nth-child(3) .feature-number,
+        .feature-card:nth-child(6) .feature-number {
+            background: linear-gradient(135deg, #38b2ac, #43c6b8);
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== Testimonials Section (Light Green Background) ===== */
+        .testimonials {
+            padding: var(--section-padding);
+            background: var(--bg-testimonials);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonials .section-eyebrow {
+            color: var(--accent-green);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .testimonial-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 36px 30px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.4s ease;
+            position: relative;
+            border: 1px solid rgba(56, 178, 172, 0.06);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .testimonial-stars {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 16px;
+        }
+
+        .testimonial-stars svg {
+            width: 18px;
+            height: 18px;
+            color: #f59e0b;
+            fill: #f59e0b;
+        }
+
+        .testimonial-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-white);
+            flex-shrink: 0;
+        }
+
+        .testimonial-card:nth-child(1) .testimonial-avatar {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .testimonial-card:nth-child(2) .testimonial-avatar {
+            background: linear-gradient(135deg, #38b2ac, #43e97b);
+        }
+
+        .testimonial-card:nth-child(3) .testimonial-avatar {
+            background: linear-gradient(135deg, #4facfe, #667eea);
+        }
+
+        .testimonial-author-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .testimonial-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .testimonial-role {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        /* ===== FAQ Section (White Background) ===== */
+        .faq {
+            padding: var(--section-padding);
+            background: var(--white);
+            position: relative;
+        }
+
+        .faq .section-eyebrow {
+            color: var(--accent-indigo);
+        }
+
+        .faq-list {
+            max-width: 760px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .faq-item {
+            background: #f8faff;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(102, 126, 234, 0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(102, 126, 234, 0.2);
+        }
+
+        .faq-item.active {
+            border-color: rgba(102, 126, 234, 0.15);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.08);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 28px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            transition: color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--accent-indigo);
+        }
+
+        .faq-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .faq-icon svg {
+            width: 16px;
+            height: 16px;
+            color: var(--accent-indigo);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            background: var(--gradient-purple);
+        }
+
+        .faq-item.active .faq-icon svg {
+            color: white;
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer-content {
+            padding: 0 28px 22px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* ===== Pre-Footer CTA (Light Green Background) ===== */
+        .bottom-cta {
+            padding: 140px 0;
+            background: var(--bg-cta);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bottom-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(56, 178, 172, 0.06) 0%, rgba(67, 233, 123, 0.04) 40%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .bottom-cta .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-title {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 18px;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .cta-title .gradient-text {
+            background: var(--gradient-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 44px;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        .cta-trust {
+            margin-top: 36px;
+            display: flex;
+            justify-content: center;
+            gap: 36px;
+            flex-wrap: wrap;
+        }
+
+        .cta-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+
+        .cta-trust-item svg {
+            width: 16px;
+            height: 16px;
+            color: var(--accent-green);
+        }
+
+        /* ===== Footer (Dark Background) ===== */
+        .footer {
+            background: var(--dark);
+            padding: 64px 0 40px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand-area {
+            max-width: 320px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 14px;
+            text-decoration: none;
+        }
+
+        .footer-brand svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .footer-tagline {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 56px;
+        }
+
+        .footer-link-group h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-link-group ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-link-group a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link-group a:hover {
+            color: var(--text-white);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 14px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--gradient-purple);
+            border-color: transparent;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-social a svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .footer-copyright {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* ===== Scroll Reveal ===== */
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children > * {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal-children.active > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children.active > *:nth-child(1) { transition-delay: 0.05s; }
+        .js .reveal-children.active > *:nth-child(2) { transition-delay: 0.1s; }
+        .js .reveal-children.active > *:nth-child(3) { transition-delay: 0.15s; }
+        .js .reveal-children.active > *:nth-child(4) { transition-delay: 0.2s; }
+        .js .reveal-children.active > *:nth-child(5) { transition-delay: 0.25s; }
+        .js .reveal-children.active > *:nth-child(6) { transition-delay: 0.3s; }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 1024px) {
+            .hero .container {
+                gap: 40px;
+            }
+
+            .hero-title {
+                font-size: 44px;
+            }
+
+            .zigzag-section {
+                gap: 48px;
+            }
+
+            .zigzag-title {
+                font-size: 34px;
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-title {
+                font-size: 38px;
+            }
+
+            .footer-links {
+                gap: 36px;
+            }
+        }
+
+        /* ============================================
+           Hamburger Menu Toggle
+           ============================================ */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .nav-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .nav.menu-open .nav-toggle span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .nav.menu-open .nav-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+        .nav.menu-open .nav-toggle span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --section-padding: 80px 0;
+            }
+
+            .nav-toggle { display: flex; color: inherit; }
+            .nav > .container, .nav > div { flex-wrap: wrap; }
+            .nav-links {
+                display: none;
+                order: 99;
+                flex-basis: 100%;
+                flex-direction: column;
+                padding: 12px 0 4px;
+                gap: 0;
+            }
+            .nav-links a {
+                display: block;
+                padding: 12px 0;
+                font-size: 15px;
+                border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+            }
+            .nav-links li { list-style: none; }
+            .nav-links li:last-child a { border-bottom: none; }
+            .nav.menu-open .nav-links { display: flex; }
+
+            .hero {
+                padding-top: 100px;
+                padding-bottom: 60px;
+            }
+
+            .hero .container {
+                grid-template-columns: 1fr;
+                gap: 48px;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 38px;
+                letter-spacing: -1px;
+            }
+
+            .hero-subtitle {
+                margin-left: auto;
+                margin-right: auto;
+                font-size: 16px;
+            }
+
+            .hero-cta-group {
+                justify-content: center;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .hero-trust {
+                justify-content: center;
+            }
+
+            .hero-float-badge {
+                display: none;
+            }
+
+            .zigzag-section {
+                grid-template-columns: 1fr;
+                gap: 36px;
+                margin-bottom: 80px;
+            }
+
+            .zigzag-section.reverse .zigzag-content {
+                order: 1;
+            }
+
+            .zigzag-section.reverse .zigzag-image {
+                order: 2;
+            }
+
+            .zigzag-title {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+                margin: 0 auto;
+            }
+
+            .cta-title {
+                font-size: 34px;
+            }
+
+            .bottom-cta {
+                padding: 100px 0;
+            }
+
+            .cta-trust {
+                flex-direction: column;
+                gap: 12px;
+                align-items: center;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 36px;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-brand-area {
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 28px;
+                align-items: center;
+            }
+
+            .footer-link-group {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 30px;
+            }
+
+            .zigzag-title {
+                font-size: 24px;
+            }
+
+            .cta-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+    <!-- ===== Navigation ===== -->
+    <nav class="nav">
+        <div class="container">
+            <a href="#" class="nav-brand">
+                <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="34" height="34" rx="9" fill="url(#navGrad)" opacity="0.15"/>
+                    <path d="M10 17C10 13.134 13.134 10 17 10C20.866 10 24 13.134 24 17" stroke="url(#navGrad)" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M14 20C14 18.343 15.343 17 17 17C18.657 17 20 18.343 20 20" stroke="#764ba2" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="17" cy="24" r="1.5" fill="#667eea"/>
+                    <circle cx="17" cy="10" r="1.5" fill="#764ba2"/>
+                    <defs>
+                        <linearGradient id="navGrad" x1="0" y1="0" x2="34" y2="34">
+                            <stop stop-color="#667eea"/>
+                            <stop offset="1" stop-color="#764ba2"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                DataFlow
+            </a>
+            <button class="nav-toggle" aria-label="菜单" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links">
+                <li><a href="#features">功能</a></li>
+                <li><a href="#testimonials">评价</a></li>
+                <li><a href="#faq">常见问题</a></li>
+                <li><a href="#cta" class="nav-cta">免费开始</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== Hero Section - Split Layout ===== -->
+    <section class="hero">
+        <div class="hero-deco-1"></div>
+        <div class="hero-deco-2"></div>
+        <div class="hero-deco-3"></div>
+        <div class="hero-deco-4"></div>
+
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                    全新 3.0 版本 · 更强大的数据引擎
+                </span>
+
+                <h1 class="hero-title">
+                    让数据驱动<br>
+                    <span class="gradient-text">每一个决策</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    DataFlow 是新一代智能数据分析平台。实时洞察、自动报表、AI 预测——
+                    帮助团队从海量数据中发现增长机会，做出更明智的商业决策。
+                </p>
+
+                <div class="hero-cta-group">
+                    <a href="#cta" class="btn-primary">
+                        免费试用 14 天
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="#features" class="btn-secondary">
+                        了解更多
+                    </a>
+                </div>
+
+                <div class="hero-trust">
+                    <div class="hero-trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        无需信用卡
+                    </div>
+                    <div class="hero-trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        5 分钟快速上手
+                    </div>
+                    <div class="hero-trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        10,000+ 团队信赖
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <img src="" alt="DataFlow 数据分析仪表盘" data-slot="hero" data-size="600x600">
+                <div class="hero-float-badge hero-float-badge-1">
+                    <span class="badge-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                    </span>
+                    <div class="badge-text">
+                        <span class="badge-value">+47.2%</span>
+                        <span class="badge-label">效率提升</span>
+                    </div>
+                </div>
+                <div class="hero-float-badge hero-float-badge-2">
+                    <span class="badge-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </span>
+                    <div class="badge-text">
+                        <span class="badge-value">200+</span>
+                        <span class="badge-label">数据源接入</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Zig-Zag Flow (White Background) ===== -->
+    <section class="zigzag">
+        <div class="container">
+            <!-- Section 1: Why Choose Us (Text Left, Image Right) -->
+            <div class="zigzag-section">
+                <div class="zigzag-content reveal">
+                    <span class="zigzag-label blue">为什么选择我们</span>
+                    <h2 class="zigzag-title">告别数据孤岛，<br>统一全渠道洞察</h2>
+                    <p class="zigzag-description">
+                        传统工具让数据散落在不同平台、不同格式中。DataFlow 一键连接 200+ 数据源，
+                        自动清洗、整合、建模，让你在一个仪表盘上看到全貌。
+                    </p>
+                    <ul class="zigzag-features">
+                        <li>
+                            <svg class="check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            200+ 数据源一键接入
+                        </li>
+                        <li>
+                            <svg class="check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            智能数据清洗与标准化
+                        </li>
+                        <li>
+                            <svg class="check-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            实时同步，秒级延迟
+                        </li>
+                    </ul>
+                </div>
+                <div class="zigzag-image">
+                    <img src="" alt="统一数据洞察" data-slot="section" data-size="400x300">
+                </div>
+            </div>
+
+            <!-- Section 2: Core Features (Image Left, Text Right) -->
+            <div class="zigzag-section reverse">
+                <div class="zigzag-content reveal">
+                    <span class="zigzag-label purple">核心功能</span>
+                    <h2 class="zigzag-title">AI 驱动分析，<br>让数据自己讲故事</h2>
+                    <p class="zigzag-description">
+                        不需要写 SQL，不需要懂统计学。用自然语言提问，DataFlow 的 AI 引擎就能
+                        自动生成可视化报表、发现趋势异常、给出决策建议。
+                    </p>
+                    <ul class="zigzag-features">
+                        <li>
+                            <svg class="check-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            自然语言查询与可视化
+                        </li>
+                        <li>
+                            <svg class="check-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            异常检测与智能预警
+                        </li>
+                        <li>
+                            <svg class="check-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            预测模型一键生成
+                        </li>
+                    </ul>
+                </div>
+                <div class="zigzag-image">
+                    <img src="" alt="AI 驱动数据分析" data-slot="section" data-size="400x300">
+                </div>
+            </div>
+
+            <!-- Section 3: How to Start (Text Left, Image Right) -->
+            <div class="zigzag-section">
+                <div class="zigzag-content reveal">
+                    <span class="zigzag-label green">轻松上手</span>
+                    <h2 class="zigzag-title">三步开始，<br>五分钟看到价值</h2>
+                    <p class="zigzag-description">
+                        注册账号、连接数据源、选择模板——仅此三步，你就能获得一个专属的数据分析中心。
+                        丰富的行业模板让你无需从零开始。
+                    </p>
+                    <ul class="zigzag-features">
+                        <li>
+                            <svg class="check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            50+ 行业模板开箱即用
+                        </li>
+                        <li>
+                            <svg class="check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            拖拽式仪表盘构建器
+                        </li>
+                        <li>
+                            <svg class="check-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            全程引导式新手教学
+                        </li>
+                    </ul>
+                </div>
+                <div class="zigzag-image">
+                    <img src="" alt="快速上手流程" data-slot="section" data-size="400x300">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Feature Grid (Light Blue Background) ===== -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-eyebrow">产品能力</p>
+                <h2 class="section-title">强大功能，简洁体验</h2>
+                <p class="section-subtitle">
+                    从数据接入到商业洞察，DataFlow 提供端到端的解决方案
+                </p>
+            </div>
+            <div class="features-grid reveal-children">
+                <div class="feature-card">
+                    <div class="feature-number">01</div>
+                    <h3 class="feature-title">实时仪表盘</h3>
+                    <p class="feature-description">
+                        秒级刷新的可视化面板，支持 30+ 图表类型，拖拽即可搭建专属监控视图。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">02</div>
+                    <h3 class="feature-title">智能报表</h3>
+                    <p class="feature-description">
+                        AI 自动生成周报、月报，关键指标变化一目了然，支持定时推送到邮件和飞书。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">03</div>
+                    <h3 class="feature-title">预测分析</h3>
+                    <p class="feature-description">
+                        内置机器学习模型，基于历史数据预测未来趋势，提前发现增长机会与潜在风险。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">04</div>
+                    <h3 class="feature-title">团队协作</h3>
+                    <p class="feature-description">
+                        仪表盘共享、评论讨论、权限管理，让数据驱动成为团队的共同语言。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">05</div>
+                    <h3 class="feature-title">安全合规</h3>
+                    <p class="feature-description">
+                        SOC 2 认证、端到端加密、细粒度权限控制，满足企业级数据安全要求。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">06</div>
+                    <h3 class="feature-title">开放 API</h3>
+                    <p class="feature-description">
+                        完善的 RESTful API 和 Webhook 支持，轻松嵌入你的现有工作流。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Testimonials (Light Green Background) ===== -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-eyebrow">用户评价</p>
+                <h2 class="section-title">深受万千团队信赖</h2>
+                <p class="section-subtitle">
+                    从初创公司到世界 500 强，DataFlow 正在改变团队与数据的关系
+                </p>
+            </div>
+            <div class="testimonials-grid reveal-children">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <p class="testimonial-text">
+                        我们过去每周要花两天时间手工整理各渠道数据。接入 DataFlow 后，所有报表自动生成，
+                        团队终于可以把精力放在策略优化而非数据搬运上。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">张</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">张明远</span>
+                            <span class="testimonial-role">CloudMart · 数据总监</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <p class="testimonial-text">
+                        DataFlow 的 AI 预测功能让我们提前两周预判到了一次用户流失高峰，
+                        及时调整了运营策略，成功挽留了 23% 的濒危用户。这个工具物超所值。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">林</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">林思涵</span>
+                            <span class="testimonial-role">NexGen · 增长负责人</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <p class="testimonial-text">
+                        作为一个完全不懂 SQL 的产品经理，我现在可以用中文直接问 DataFlow 问题，
+                        它会自动生成图表和分析。这简直是降维打击。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">王</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">王晓燕</span>
+                            <span class="testimonial-role">StarUp · 产品经理</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FAQ Section (White Background) ===== -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-eyebrow">常见问题</p>
+                <h2 class="section-title">你可能想知道的</h2>
+                <p class="section-subtitle">
+                    如果没有找到你的问题，欢迎联系我们的支持团队
+                </p>
+            </div>
+            <div class="faq-list reveal">
+                <div class="faq-item active">
+                    <button class="faq-question">
+                        DataFlow 支持哪些数据源？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            DataFlow 目前支持 200+ 数据源接入，包括：MySQL、PostgreSQL、MongoDB 等主流数据库；
+                            Google Analytics、百度统计等分析工具；飞书、钉钉、企业微信等办公协作平台；
+                            以及自定义 API 和 CSV 文件导入。我们每月都在增加新的数据连接器。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        免费版有哪些限制？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            免费版支持 3 个数据源、5 个仪表盘、每月 10,000 次查询和基础 AI 分析功能。
+                            对于个人用户和小团队来说已经非常足够。Pro 版解锁无限数据源、高级 AI 预测和团队协作功能，
+                            每用户每月仅需 ¥99。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        我的数据安全吗？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            我们将数据安全视为最高优先级。DataFlow 已通过 SOC 2 Type II 认证，采用端到端加密传输和存储，
+                            支持数据脱敏和细粒度权限控制。所有数据存储在符合 GDPR 标准的数据中心，
+                            并且我们绝不会将客户数据用于训练 AI 模型。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        可以和现有工具集成吗？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            当然可以！DataFlow 提供完善的 RESTful API 和丰富的 Webhook 事件。
+                            同时我们提供飞书、Slack、邮件等通知渠道的原生集成，以及 Zapier 和 Make 连接器，
+                            让你轻松将 DataFlow 嵌入现有工作流。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        支持哪些部署方式？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            DataFlow 提供 SaaS 云服务（开箱即用）和私有化部署两种方案。
+                            私有化部署支持 Docker 和 Kubernetes，可部署在你自己的服务器或私有云上，
+                            满足金融、医疗等对数据驻留有严格要求的行业需求。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Pre-Footer CTA (Light Green Background) ===== -->
+    <section class="bottom-cta" id="cta">
+        <div class="container reveal">
+            <h2 class="cta-title">准备好用数据<br><span class="gradient-text">驱动增长</span>了吗？</h2>
+            <p class="cta-subtitle">
+                加入 10,000+ 团队，让 DataFlow 成为你的数据分析中枢。
+                14 天免费试用，零风险体验。
+            </p>
+            <a href="#" class="btn-primary" style="padding: 18px 48px; font-size: 17px;">
+                立即免费开始
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            <div class="cta-trust">
+                <div class="cta-trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    14 天免费试用
+                </div>
+                <div class="cta-trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    无需信用卡
+                </div>
+                <div class="cta-trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    随时可取消
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Footer (Dark Background) ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand-area">
+                    <a href="#" class="footer-brand">
+                        <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="34" height="34" rx="9" fill="url(#footerGrad)" opacity="0.2"/>
+                            <path d="M10 17C10 13.134 13.134 10 17 10C20.866 10 24 13.134 24 17" stroke="url(#footerGrad)" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M14 20C14 18.343 15.343 17 17 17C18.657 17 20 18.343 20 20" stroke="#9f7aea" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="17" cy="24" r="1.5" fill="#667eea"/>
+                            <circle cx="17" cy="10" r="1.5" fill="#9f7aea"/>
+                            <defs>
+                                <linearGradient id="footerGrad" x1="0" y1="0" x2="34" y2="34">
+                                    <stop stop-color="#667eea"/>
+                                    <stop offset="1" stop-color="#9f7aea"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        DataFlow
+                    </a>
+                    <p class="footer-tagline">让数据驱动每一个决策。<br>新一代智能数据分析平台，赋能高效团队。</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-link-group">
+                        <h4>产品</h4>
+                        <ul>
+                            <li><a href="#">功能介绍</a></li>
+                            <li><a href="#">定价方案</a></li>
+                            <li><a href="#">更新日志</a></li>
+                            <li><a href="#">API 文档</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-link-group">
+                        <h4>资源</h4>
+                        <ul>
+                            <li><a href="#">帮助中心</a></li>
+                            <li><a href="#">博客</a></li>
+                            <li><a href="#">案例研究</a></li>
+                            <li><a href="#">视频教程</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-link-group">
+                        <h4>公司</h4>
+                        <ul>
+                            <li><a href="#">关于我们</a></li>
+                            <li><a href="#">加入团队</a></li>
+                            <li><a href="#">联系我们</a></li>
+                            <li><a href="#">隐私政策</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="GitHub">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                            <rect x="2" y="9" width="4" height="12"/>
+                            <circle cx="4" cy="4" r="2"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2026 DataFlow. All rights reserved. 让数据驱动每一个决策。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== Scripts ===== -->
+    <script>
+        // Hamburger 菜单切换
+        const navToggle = document.querySelector('.navbar-toggle, .nav-toggle');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navToggle.closest('nav').classList.toggle('menu-open');
+                navToggle.setAttribute('aria-expanded',
+                    navToggle.closest('nav').classList.contains('menu-open'));
+            });
+            navToggle.closest('nav').querySelectorAll('.navbar-links a, .nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.closest('nav').classList.remove('menu-open');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        });
+
+        // Nav scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll Reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+        document.querySelectorAll('.reveal, .reveal-children').forEach(el => {
+            revealObserver.observe(el);
+        });
+    </script>
+</body>
+</html>

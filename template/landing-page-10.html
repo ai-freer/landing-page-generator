@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeloCity | 突破增长瓶颈，加速商业决策</title>
+    <style>
+        /* ===== CSS Reset & Base Styles ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Core Palette — Dynamic Business */
+            --navy: #0F172A;
+            --navy-light: #1E293B;
+            --electric-blue: #3B82F6;
+            --electric-blue-dark: #2563EB;
+            --electric-blue-light: #60A5FA;
+            --light-blue: #E0F2FE;
+            --light-blue-mid: #BAE6FD;
+            --slate-50: #F8FAFC;
+            --slate-100: #F1F5F9;
+            --slate-200: #E2E8F0;
+            --slate-300: #CBD5E1;
+            --slate-400: #94A3B8;
+            --slate-500: #64748B;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --white: #ffffff;
+
+            /* Text */
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-tertiary: #64748B;
+            --text-light: #94A3B8;
+            --text-white: #ffffff;
+            --text-on-navy: #E2E8F0;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
+            --shadow-card: 0 2px 12px rgba(15, 23, 42, 0.06);
+            --shadow-card-hover: 0 8px 30px rgba(15, 23, 42, 0.12);
+
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif;
+
+            /* Spacing */
+            --section-padding: 120px 0;
+            --container-max-width: 1200px;
+
+            /* Radius — Business: small & sharp */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== Container ===== */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(36px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes slantShimmer {
+            0% { transform: translateX(-100%) skewX(-15deg); }
+            100% { transform: translateX(200%) skewX(-15deg); }
+        }
+
+        /* ===== Navigation ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 18px 0;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.7) 0%, transparent 100%);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav.scrolled {
+            padding: 12px 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px) saturate(1.2);
+            -webkit-backdrop-filter: blur(20px) saturate(1.2);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-white);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-brand svg {
+            width: 34px;
+            height: 34px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-on-navy);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--electric-blue-light);
+        }
+
+        .nav-cta {
+            background: var(--electric-blue) !important;
+            color: var(--text-white) !important;
+            padding: 10px 28px;
+            border-radius: var(--radius-sm);
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-cta:hover {
+            background: var(--electric-blue-dark) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.4) !important;
+        }
+
+        /* ===== Hero Section — Slanted with Clip-Path ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: var(--navy);
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            padding-bottom: 120px;
+        }
+
+        /* Geometric decorations for hero */
+        .hero-geo {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .hero-geo-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            right: -100px;
+            border: 1px solid rgba(59, 130, 246, 0.08);
+            border-radius: 50%;
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .hero-geo-2 {
+            width: 250px;
+            height: 250px;
+            bottom: 15%;
+            left: -60px;
+            border: 1px solid rgba(59, 130, 246, 0.06);
+            border-radius: 50%;
+            animation: pulse 10s ease-in-out infinite 2s;
+        }
+
+        .hero-geo-3 {
+            width: 120px;
+            height: 2px;
+            top: 30%;
+            left: 5%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.15), transparent);
+            transform: rotate(-15deg);
+        }
+
+        .hero-geo-4 {
+            width: 180px;
+            height: 2px;
+            bottom: 30%;
+            right: 8%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transform: rotate(-15deg);
+        }
+
+        .hero-geo-5 {
+            width: 8px;
+            height: 8px;
+            top: 25%;
+            right: 30%;
+            background: var(--electric-blue);
+            border-radius: 50%;
+            opacity: 0.25;
+            animation: pulse 4s ease-in-out infinite 1s;
+        }
+
+        .hero-geo-6 {
+            width: 6px;
+            height: 6px;
+            bottom: 35%;
+            left: 25%;
+            background: var(--electric-blue-light);
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: pulse 5s ease-in-out infinite 3s;
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            animation: fadeInLeft 0.8s ease-out;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            color: var(--electric-blue-light);
+            padding: 8px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 28px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.12;
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+            color: var(--text-white);
+        }
+
+        .hero-title .accent {
+            color: var(--electric-blue-light);
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--text-on-navy);
+            margin-bottom: 40px;
+            line-height: 1.8;
+            max-width: 480px;
+            opacity: 0.85;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--electric-blue);
+            color: var(--text-white);
+            padding: 16px 36px;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.35);
+        }
+
+        .btn-primary:hover {
+            background: var(--electric-blue-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 36px rgba(59, 130, 246, 0.45);
+        }
+
+        .btn-primary svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary:hover svg {
+            transform: translateX(3px);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            color: var(--text-white);
+            padding: 15px 32px;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--electric-blue);
+            background: rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .hero-trust {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .hero-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--slate-400);
+        }
+
+        .hero-trust-item svg {
+            width: 16px;
+            height: 16px;
+            color: var(--electric-blue-light);
+        }
+
+        .hero-image {
+            position: relative;
+            animation: fadeInRight 0.8s ease-out 0.2s both;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--radius-md);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(30, 41, 59, 0.2));
+        }
+
+
+        /* ===== Structured Zig-Zag Section (White + Line Accents) ===== */
+        .structured {
+            padding: var(--section-padding);
+            padding-top: 160px; /* Extra padding to compensate for hero slant */
+            background: var(--white);
+            position: relative;
+        }
+
+        .structured-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            margin-bottom: 100px;
+            padding-bottom: 100px;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .structured-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .structured-section.reverse .structured-content {
+            order: 2;
+        }
+
+        .structured-section.reverse .structured-image {
+            order: 1;
+        }
+
+        .structured-label {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--electric-blue);
+            margin-bottom: 16px;
+        }
+
+        .structured-title {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--electric-blue);
+            display: inline-block;
+        }
+
+        .structured-description {
+            font-size: 17px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-top: 20px;
+            margin-bottom: 28px;
+        }
+
+        .structured-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .structured-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .structured-features li svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            color: var(--electric-blue);
+        }
+
+        .structured-image {
+            position: relative;
+        }
+
+        .structured-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.4s ease;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(15, 23, 42, 0.03));
+        }
+
+        .structured-image:hover img {
+            transform: scale(1.02);
+        }
+
+        /* Angled decorative line behind structured images */
+        .structured-image::before {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background: var(--electric-blue);
+            opacity: 0.3;
+            transform: rotate(-15deg);
+            z-index: -1;
+        }
+
+        .structured-section:nth-child(1) .structured-image::before {
+            top: -16px;
+            right: 40px;
+        }
+
+        .structured-section:nth-child(2) .structured-image::before {
+            bottom: -16px;
+            left: 40px;
+        }
+
+        .structured-section:nth-child(3) .structured-image::before {
+            top: -16px;
+            left: 40px;
+        }
+
+        /* ===== Minimal Feature Grid ===== */
+        .features {
+            padding: var(--section-padding);
+            background: var(--white);
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 72px;
+        }
+
+        .section-eyebrow {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--electric-blue);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 44px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section-divider {
+            width: 60px;
+            height: 3px;
+            background: var(--electric-blue);
+            margin: 20px auto;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 56px 48px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 0 12px;
+        }
+
+        .feature-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-md);
+            background: var(--light-blue);
+            margin-bottom: 20px;
+        }
+
+        .feature-icon svg {
+            width: 28px;
+            height: 28px;
+            color: var(--electric-blue);
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            font-size: 15px;
+            color: var(--text-tertiary);
+            line-height: 1.7;
+        }
+
+        /* ===== Card-Based Testimonials ===== */
+        .testimonials {
+            padding: var(--section-padding);
+            background: var(--slate-50);
+            position: relative;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .testimonial-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 32px 28px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.4s ease;
+            position: relative;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-card-hover);
+            border-color: rgba(59, 130, 246, 0.15);
+        }
+
+        .testimonial-quote-mark {
+            font-size: 48px;
+            line-height: 1;
+            color: var(--electric-blue);
+            opacity: 0.2;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .testimonial-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-top: 20px;
+            border-top: 1px solid var(--slate-200);
+        }
+
+        .testimonial-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-white);
+            flex-shrink: 0;
+        }
+
+        .testimonial-card:nth-child(1) .testimonial-avatar,
+        .testimonial-card:nth-child(4) .testimonial-avatar {
+            background: var(--electric-blue);
+        }
+
+        .testimonial-card:nth-child(2) .testimonial-avatar,
+        .testimonial-card:nth-child(5) .testimonial-avatar {
+            background: var(--navy);
+        }
+
+        .testimonial-card:nth-child(3) .testimonial-avatar,
+        .testimonial-card:nth-child(6) .testimonial-avatar {
+            background: var(--slate-600);
+        }
+
+        .testimonial-author-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .testimonial-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .testimonial-role {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        /* ===== Clean FAQ ===== */
+        .faq {
+            padding: var(--section-padding);
+            background: var(--white);
+            position: relative;
+        }
+
+        .faq-list {
+            max-width: 760px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .faq-item {
+            border-bottom: 2px solid var(--slate-200);
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:first-child {
+            border-top: 2px solid var(--slate-200);
+        }
+
+        .faq-item:hover {
+            border-bottom-color: var(--electric-blue);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            transition: color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--electric-blue);
+        }
+
+        .faq-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .faq-icon svg {
+            width: 18px;
+            height: 18px;
+            color: var(--slate-400);
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon svg {
+            color: var(--electric-blue);
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer-content {
+            padding: 0 0 24px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* ===== Pre-Footer CTA (Light Blue Block) ===== */
+        .bottom-cta {
+            padding: 100px 0;
+            background: var(--light-blue);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bottom-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--electric-blue);
+            opacity: 0.3;
+        }
+
+        .bottom-cta .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-title {
+            font-size: 44px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 18px;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        .cta-trust {
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+            gap: 36px;
+            flex-wrap: wrap;
+        }
+
+        .cta-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+
+        .cta-trust-item svg {
+            width: 16px;
+            height: 16px;
+            color: var(--electric-blue);
+        }
+
+        /* ===== Footer (Minimal Multi-Column Links) ===== */
+        .footer {
+            background: var(--white);
+            padding: 64px 0 40px;
+            border-top: 1px solid var(--slate-200);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand-area {
+            max-width: 320px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .footer-brand svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .footer-tagline {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 56px;
+        }
+
+        .footer-link-group h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .footer-link-group ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-link-group a {
+            text-decoration: none;
+            color: var(--text-tertiary);
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link-group a:hover {
+            color: var(--electric-blue);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 28px;
+            border-top: 1px solid var(--slate-200);
+        }
+
+        .footer-copyright {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* ===== Scroll Reveal ===== */
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children > * {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal-children.active > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children.active > *:nth-child(1) { transition-delay: 0.05s; }
+        .js .reveal-children.active > *:nth-child(2) { transition-delay: 0.1s; }
+        .js .reveal-children.active > *:nth-child(3) { transition-delay: 0.15s; }
+        .js .reveal-children.active > *:nth-child(4) { transition-delay: 0.2s; }
+        .js .reveal-children.active > *:nth-child(5) { transition-delay: 0.25s; }
+        .js .reveal-children.active > *:nth-child(6) { transition-delay: 0.3s; }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 1024px) {
+            .hero .container {
+                gap: 40px;
+            }
+
+            .hero-title {
+                font-size: 44px;
+            }
+
+            .structured-section {
+                gap: 48px;
+            }
+
+            .structured-title {
+                font-size: 34px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 48px 36px;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-title {
+                font-size: 38px;
+            }
+
+            .footer-links {
+                gap: 36px;
+            }
+        }
+
+        /* ============================================
+           Hamburger Menu Toggle
+           ============================================ */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .nav-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .nav.menu-open .nav-toggle span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .nav.menu-open .nav-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+        .nav.menu-open .nav-toggle span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --section-padding: 80px 0;
+            }
+
+            .nav-toggle { display: flex; color: rgba(255, 255, 255, 0.7); }
+            .nav > .container, .nav > div { flex-wrap: wrap; }
+            .nav-links {
+                display: none;
+                order: 99;
+                flex-basis: 100%;
+                flex-direction: column;
+                padding: 12px 0 4px;
+                gap: 0;
+            }
+            .nav-links a {
+                display: block;
+                padding: 12px 0;
+                font-size: 15px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            }
+            .nav-links li { list-style: none; }
+            .nav-links li:last-child a { border-bottom: none; }
+            .nav.menu-open .nav-links { display: flex; }
+
+            .hero {
+                padding-top: 100px;
+                padding-bottom: 100px;
+                clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
+            }
+
+            .hero .container {
+                grid-template-columns: 1fr;
+                gap: 48px;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 36px;
+                letter-spacing: -1px;
+            }
+
+            .hero-subtitle {
+                margin-left: auto;
+                margin-right: auto;
+                font-size: 16px;
+            }
+
+            .hero-cta-group {
+                justify-content: center;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .btn-primary, .btn-outline {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .hero-trust {
+                justify-content: center;
+            }
+
+            .structured {
+                padding-top: 100px;
+            }
+
+            .structured-section {
+                grid-template-columns: 1fr;
+                gap: 36px;
+                margin-bottom: 60px;
+                padding-bottom: 60px;
+            }
+
+            .structured-section.reverse .structured-content {
+                order: 1;
+            }
+
+            .structured-section.reverse .structured-image {
+                order: 2;
+            }
+
+            .structured-title {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+                gap: 40px;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+                margin: 0 auto;
+            }
+
+            .cta-title {
+                font-size: 32px;
+            }
+
+            .bottom-cta {
+                padding: 80px 0;
+            }
+
+            .cta-trust {
+                flex-direction: column;
+                gap: 12px;
+                align-items: center;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 36px;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-brand-area {
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 28px;
+                align-items: center;
+            }
+
+            .footer-link-group {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 30px;
+            }
+
+            .structured-title {
+                font-size: 24px;
+            }
+
+            .cta-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+    <!-- ===== Navigation ===== -->
+    <nav class="nav">
+        <div class="container">
+            <a href="#" class="nav-brand">
+                <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="34" height="34" rx="6" fill="#3B82F6" opacity="0.15"/>
+                    <path d="M8 22L14 10L20 18L26 12" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="8" cy="22" r="2" fill="#60A5FA"/>
+                    <circle cx="14" cy="10" r="2" fill="#3B82F6"/>
+                    <circle cx="20" cy="18" r="2" fill="#3B82F6"/>
+                    <circle cx="26" cy="12" r="2" fill="#60A5FA"/>
+                </svg>
+                VeloCity
+            </a>
+            <button class="nav-toggle" aria-label="菜单" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links">
+                <li><a href="#features">功能</a></li>
+                <li><a href="#testimonials">评价</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#cta" class="nav-cta">预约演示</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== Hero Section — Slanted ===== -->
+    <section class="hero">
+        <div class="hero-geo hero-geo-1"></div>
+        <div class="hero-geo hero-geo-2"></div>
+        <div class="hero-geo hero-geo-3"></div>
+        <div class="hero-geo hero-geo-4"></div>
+        <div class="hero-geo hero-geo-5"></div>
+        <div class="hero-geo hero-geo-6"></div>
+
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                    企业版 2.0 正式发布
+                </span>
+
+                <h1 class="hero-title">
+                    突破增长瓶颈<br>
+                    <span class="accent">加速商业决策</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    VeloCity 是新一代企业效能加速引擎。整合项目管理、流程自动化与智能决策分析——帮助团队消除协作摩擦，将战略转化为执行力。
+                </p>
+
+                <div class="hero-cta-group">
+                    <a href="#cta" class="btn-primary">
+                        预约产品演示
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="#features" class="btn-outline">
+                        了解更多
+                    </a>
+                </div>
+
+                <div class="hero-trust">
+                    <div class="hero-trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        Fortune 500 企业认可
+                    </div>
+                    <div class="hero-trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        SOC 2 安全认证
+                    </div>
+                    <div class="hero-trust-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        99.99% SLA 保障
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <img src="" alt="VeloCity 企业效能仪表盘" data-slot="hero" data-size="1200x600">
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Structured Zig-Zag (White + Divider Lines) ===== -->
+    <section class="structured">
+        <div class="container">
+            <!-- Section 1: Text Left, Image Right -->
+            <div class="structured-section">
+                <div class="structured-content reveal">
+                    <span class="structured-label">全局视野</span>
+                    <h2 class="structured-title">一屏掌控<br>全局项目进展</h2>
+                    <p class="structured-description">
+                        告别在多个工具间来回切换。VeloCity 将任务、里程碑、资源分配和风险预警整合在一个动态仪表盘中，让管理层在一屏之内获得完整的项目全景。
+                    </p>
+                    <ul class="structured-features">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            跨部门项目实时看板
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            关键路径自动识别与预警
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            资源利用率热力图分析
+                        </li>
+                    </ul>
+                </div>
+                <div class="structured-image">
+                    <img src="" alt="VeloCity 项目管理仪表盘" data-slot="section" data-size="600x400">
+                </div>
+            </div>
+
+            <!-- Section 2: Image Left, Text Right -->
+            <div class="structured-section reverse">
+                <div class="structured-content reveal">
+                    <span class="structured-label">流程自动化</span>
+                    <h2 class="structured-title">用自动化消除<br>重复性工作</h2>
+                    <p class="structured-description">
+                        审批流转、状态更新、通知推送——这些本不该消耗团队精力的事务，VeloCity 的智能工作流引擎帮你自动完成。设定规则，从此告别手工操作。
+                    </p>
+                    <ul class="structured-features">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            可视化工作流编辑器
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            200+ 预制自动化模板
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            与飞书、钉钉、企微无缝打通
+                        </li>
+                    </ul>
+                </div>
+                <div class="structured-image">
+                    <img src="" alt="VeloCity 自动化工作流" data-slot="section" data-size="600x400">
+                </div>
+            </div>
+
+            <!-- Section 3: Text Left, Image Right -->
+            <div class="structured-section">
+                <div class="structured-content reveal">
+                    <span class="structured-label">智能决策</span>
+                    <h2 class="structured-title">数据驱动<br>每一次战略决策</h2>
+                    <p class="structured-description">
+                        VeloCity 的 AI 分析引擎持续挖掘项目数据，提供可行动的洞察——从团队产能预测到交付风险评估，让每一次决策都有数据支撑。
+                    </p>
+                    <ul class="structured-features">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            AI 驱动的交付预测模型
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            自动生成周报与趋势报告
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            自定义 KPI 追踪与预警
+                        </li>
+                    </ul>
+                </div>
+                <div class="structured-image">
+                    <img src="" alt="VeloCity 数据分析洞察" data-slot="section" data-size="600x400">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Minimal Feature Grid ===== -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-eyebrow">产品能力</p>
+                <h2 class="section-title">为企业效能而生</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">
+                    从战略规划到落地执行，VeloCity 提供全链路的效能加速方案
+                </p>
+            </div>
+            <div class="features-grid reveal-children">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">项目矩阵</h3>
+                    <p class="feature-description">
+                        多维度项目视图，支持甘特图、看板、列表自由切换，满足不同角色的管理需求。
+                    </p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">时间追踪</h3>
+                    <p class="feature-description">
+                        精确到任务级别的工时记录与分析，帮助优化资源分配，提升团队产出比。
+                    </p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">团队协作</h3>
+                    <p class="feature-description">
+                        实时评论、文件共享、@提及，消除信息孤岛，让跨部门协作顺畅无阻。
+                    </p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">安全合规</h3>
+                    <p class="feature-description">
+                        SOC 2 Type II 认证、GDPR 合规、端到端加密，满足金融和医疗级安全标准。
+                    </p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">效能洞察</h3>
+                    <p class="feature-description">
+                        AI 驱动的团队效能分析，识别瓶颈、预测风险，用数据指导管理优化。
+                    </p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">开放集成</h3>
+                    <p class="feature-description">
+                        完善的 API 和 Webhook，原生支持 Jira、GitLab、飞书等 50+ 工具无缝对接。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Card-Based Testimonials ===== -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-eyebrow">客户评价</p>
+                <h2 class="section-title">3,200+ 企业的共同选择</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">
+                    从初创团队到世界 500 强，VeloCity 正在重新定义企业效能管理
+                </p>
+            </div>
+            <div class="testimonials-grid reveal-children">
+                <div class="testimonial-card">
+                    <div class="testimonial-quote-mark">"</div>
+                    <p class="testimonial-text">
+                        引入 VeloCity 后，我们的项目交付周期缩短了 40%。关键路径预警功能帮我们提前两周规避了一次重大延期风险。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">陈</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">陈思远</span>
+                            <span class="testimonial-role">TechBridge · CTO</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote-mark">"</div>
+                    <p class="testimonial-text">
+                        作为一个 300 人的研发团队，跨部门协作一直是痛点。VeloCity 的统一看板让所有人都能看到全局进展，沟通成本降低了一半。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">李</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">李明哲</span>
+                            <span class="testimonial-role">CloudNova · VP of Engineering</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote-mark">"</div>
+                    <p class="testimonial-text">
+                        自动化工作流帮我们节省了每周 20+ 小时的手工操作时间。团队终于可以聚焦在真正创造价值的工作上。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">王</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">王婷婷</span>
+                            <span class="testimonial-role">FinEdge · 运营总监</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote-mark">"</div>
+                    <p class="testimonial-text">
+                        VeloCity 的 AI 效能洞察让我们发现了几个隐藏的流程瓶颈，优化后整体产出提升了 35%。数据驱动管理不再是口号。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">张</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">张凯文</span>
+                            <span class="testimonial-role">MegaSoft · PMO 负责人</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote-mark">"</div>
+                    <p class="testimonial-text">
+                        安全合规是我们选择工具的第一要素。VeloCity 的 SOC 2 认证和私有化部署方案完全满足了金融行业的严格要求。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">刘</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">刘海涛</span>
+                            <span class="testimonial-role">华信资本 · 技术副总裁</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-quote-mark">"</div>
+                    <p class="testimonial-text">
+                        从 Jira 迁移到 VeloCity 只花了两天，数据无缝迁移。更简洁的界面让团队的学习曲线几乎为零。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">赵</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">赵晓峰</span>
+                            <span class="testimonial-role">DataPulse · 研发经理</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Clean FAQ ===== -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-eyebrow">常见问题</p>
+                <h2 class="section-title">你可能想知道的</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">
+                    如果没有找到你的问题，欢迎联系我们的客户成功团队
+                </p>
+            </div>
+            <div class="faq-list reveal">
+                <div class="faq-item active">
+                    <button class="faq-question">
+                        VeloCity 与 Jira、Asana 有什么区别？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            VeloCity 不仅仅是项目管理工具，更是一个企业效能加速引擎。除了任务管理和协作功能外，VeloCity 内置了 AI 驱动的效能分析、智能工作流自动化、以及企业级的安全合规方案。我们专为中大型企业的复杂管理场景设计，帮助管理层从战略到执行实现全链路加速。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        是否支持私有化部署？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            支持。VeloCity 提供 SaaS 云服务和私有化部署两种方案。私有化部署支持 Docker 和 Kubernetes，可部署在你自己的服务器或私有云上，完全满足金融、医疗、政府等对数据驻留有严格要求的行业需求。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        迁移现有数据需要多长时间？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            VeloCity 提供一键迁移工具，支持从 Jira、Asana、Trello、飞书项目等主流平台导入。100 人团队的完整数据迁移通常在 1-2 个工作日内完成，我们的客户成功团队会全程协助。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        如何计费？有免费试用吗？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            VeloCity 按座位数月度计费，提供 Professional（¥89/人/月）和 Enterprise（定制报价）两个版本。所有方案均支持 30 天免费试用，Enterprise 版可安排专属产品演示和 POC 验证。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        可以和现有的 DevOps 工具链集成吗？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            当然可以。VeloCity 原生支持 GitLab、GitHub、Jenkins、飞书、钉钉、企业微信、Slack 等 50+ 工具的集成。同时提供完善的 RESTful API 和 Webhook 事件，让你轻松将 VeloCity 嵌入现有工作流。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Pre-Footer CTA (Light Blue Block) ===== -->
+    <section class="bottom-cta" id="cta">
+        <div class="container reveal">
+            <h2 class="cta-title">准备好加速<br>你的团队效能了吗？</h2>
+            <p class="cta-subtitle">
+                加入 3,200+ 企业客户，让 VeloCity 成为你的效能加速引擎。30 天免费试用，零风险体验。
+            </p>
+            <a href="#" class="btn-primary" style="padding: 18px 48px; font-size: 17px;">
+                预约免费演示
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            <div class="cta-trust">
+                <div class="cta-trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    30 天免费试用
+                </div>
+                <div class="cta-trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    专属客户成功经理
+                </div>
+                <div class="cta-trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    随时可取消
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Footer (Minimal Multi-Column) ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand-area">
+                    <a href="#" class="footer-brand">
+                        <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="34" height="34" rx="6" fill="#3B82F6" opacity="0.12"/>
+                            <path d="M8 22L14 10L20 18L26 12" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="8" cy="22" r="2" fill="#60A5FA"/>
+                            <circle cx="14" cy="10" r="2" fill="#3B82F6"/>
+                            <circle cx="20" cy="18" r="2" fill="#3B82F6"/>
+                            <circle cx="26" cy="12" r="2" fill="#60A5FA"/>
+                        </svg>
+                        VeloCity
+                    </a>
+                    <p class="footer-tagline">突破增长瓶颈，加速商业决策。<br>新一代企业效能加速引擎。</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-link-group">
+                        <h4>产品</h4>
+                        <ul>
+                            <li><a href="#">功能介绍</a></li>
+                            <li><a href="#">定价方案</a></li>
+                            <li><a href="#">更新日志</a></li>
+                            <li><a href="#">API 文档</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-link-group">
+                        <h4>解决方案</h4>
+                        <ul>
+                            <li><a href="#">研发管理</a></li>
+                            <li><a href="#">项目管理</a></li>
+                            <li><a href="#">企业协作</a></li>
+                            <li><a href="#">流程自动化</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-link-group">
+                        <h4>资源</h4>
+                        <ul>
+                            <li><a href="#">帮助中心</a></li>
+                            <li><a href="#">博客</a></li>
+                            <li><a href="#">案例研究</a></li>
+                            <li><a href="#">视频教程</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-link-group">
+                        <h4>公司</h4>
+                        <ul>
+                            <li><a href="#">关于我们</a></li>
+                            <li><a href="#">加入团队</a></li>
+                            <li><a href="#">联系我们</a></li>
+                            <li><a href="#">隐私政策</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2026 VeloCity. All rights reserved. 突破增长瓶颈，加速商业决策。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== Scripts ===== -->
+    <script>
+        // Hamburger 菜单切换
+        const navToggle = document.querySelector('.navbar-toggle, .nav-toggle');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navToggle.closest('nav').classList.toggle('menu-open');
+                navToggle.setAttribute('aria-expanded',
+                    navToggle.closest('nav').classList.contains('menu-open'));
+            });
+            navToggle.closest('nav').querySelectorAll('.navbar-links a, .nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.closest('nav').classList.remove('menu-open');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        });
+
+        // Nav scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Scroll Reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+        document.querySelectorAll('.reveal, .reveal-children').forEach(el => {
+            revealObserver.observe(el);
+        });
+    </script>
+</body>
+</html>

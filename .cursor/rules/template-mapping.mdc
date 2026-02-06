@@ -1,0 +1,48 @@
+---
+description: 模板文档与HTML的双向映射关系 - 本项目最核心的工作模式
+alwaysApply: true
+---
+
+# 模板双向映射规则
+
+本项目的核心架构是 **模板文档（MD）** 与 **模板实现（HTML）** 的一一对应关系。
+
+## 对应关系
+
+```
+references/templates/template-{N}.md  ←→  template/landing-page-{N}.html
+```
+
+- `template-01.md` ←→ `landing-page-01.html`
+- `template-02.md` ←→ `landing-page-02.html`
+- ...以此类推
+
+## 两侧的职责
+
+| 文件 | 职责 |
+|------|------|
+| `references/templates/template-{N}.md` | 规范文档：定义结构、设计理念、美学重点、配色、配置字段、适用场景 |
+| `template/landing-page-{N}.html` | 实现参考：对应的完整 HTML/CSS 代码，包含实际的视觉效果和交互 |
+
+## 工作流程
+
+### 创建新模板
+1. 先读取对应的 `references/templates/template-{N}.md` 了解设计规范
+2. 参考已有的 `template/landing-page-*.html` 了解项目代码风格
+3. 在 `template/` 下创建 `landing-page-{N}.html`
+4. 需要图片时生成图片放入 `assets/` 目录
+
+### 双向同步原则
+- **MD 变更 → HTML 更新**：如果模板文档的结构、美学重点、配色等发生变化，对应的 HTML 实现应同步更新
+- **HTML 优化 → MD 补充**：如果 HTML 实现中沉淀了文档未描述的设计细节（如浮动标签模式），应反向补充到 MD 文档中
+- 修改任一侧时，主动检查另一侧是否需要同步
+
+### MD 文档的优先级
+- "美学重点"章节是生成 HTML 时的**首要参考**
+- HTML/CSS 技术细节仅作为排版结构和命名规范参考
+- 以美学高度和视觉冲击力为首要目标，不拘泥于代码细节
+
+## 资源目录
+
+- `assets/` — 图片资源，命名规则：`{用途}-{模板编号}.png`（如 `hero-split-07.png`、`zigzag-why-07.png`）
+- `references/` — 还包含 `image-generation-guide.md`、`config-guide.md` 等辅助文档

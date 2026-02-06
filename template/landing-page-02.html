@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURUM ONE 旗舰降噪耳机 | 沉浸你的世界</title>
+    <style>
+        /* ===== CSS Reset & Base Styles ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary Colors */
+            --primary-blue: #4299e1;
+            --primary-blue-dark: #3182ce;
+            --primary-blue-light: #63b3ed;
+            
+            /* Background Colors */
+            --hero-gradient-start: #f5f7fa;
+            --hero-gradient-end: #e8f0f8;
+            --cta-bg: #1a1a2e;
+            --footer-bg: #0f0f1a;
+            --light-bg: #f7fafc;
+            --white: #ffffff;
+            
+            /* Text Colors */
+            --text-dark: #1a1a1a;
+            --text-medium: #666666;
+            --text-light: #999999;
+            --text-white: #ffffff;
+            
+            /* Shadows */
+            --shadow-product: 0 20px 50px rgba(0, 0, 0, 0.15);
+            --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-card-hover: 0 12px 32px rgba(66, 153, 225, 0.15);
+            --shadow-button: 0 4px 14px rgba(66, 153, 225, 0.4);
+            
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            
+            /* Spacing */
+            --section-padding: 100px 0;
+            --container-max-width: 1200px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== Container ===== */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ============================================
+           Navbar
+           ============================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 1px 20px rgba(0, 0, 0, 0.06);
+            padding: 14px 0;
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-brand {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-dark);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand span { color: var(--primary-blue); }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .navbar-links a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-medium);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-links a:hover { color: var(--primary-blue); }
+
+        .navbar-cta {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-white) !important;
+            text-decoration: none;
+            padding: 10px 24px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(66, 153, 225, 0.3);
+        }
+
+        .navbar-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+        }
+
+        /* ===== Hero Section ===== */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--hero-gradient-start) 0%, var(--hero-gradient-end) 100%);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 80%;
+            height: 150%;
+            background: radial-gradient(ellipse, rgba(66, 153, 225, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            padding-right: 40px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            color: var(--text-white);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-badge::before {
+            content: '✨';
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.1;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-tagline {
+            font-size: 20px;
+            color: var(--text-medium);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .hero-description {
+            font-size: 16px;
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 32px;
+            max-width: 480px;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            color: var(--text-white);
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-button);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(66, 153, 225, 0.5);
+        }
+
+        .btn-primary svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary:hover svg {
+            transform: translateX(4px);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-medium);
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            color: var(--primary-blue);
+        }
+
+        .hero-price-hint {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .hero-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .hero-price-original {
+            font-size: 16px;
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-product);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero-image-wrapper:hover {
+            transform: scale(1.02);
+        }
+
+        .hero-image {
+            width: 100%;
+            max-width: 560px;
+            height: auto;
+            display: block;
+            border-radius: 20px;
+        }
+
+        .hero-floating-badge {
+            position: absolute;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 20px;
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .hero-floating-badge.top-right {
+            top: 24px;
+            right: 24px;
+            animation-delay: 0.5s;
+        }
+
+        .hero-floating-badge.bottom-left {
+            bottom: 24px;
+            left: 24px;
+        }
+
+        .floating-badge-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .floating-badge-icon {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-badge-icon svg {
+            width: 14px;
+            height: 14px;
+            color: var(--primary-blue);
+            opacity: 0.8;
+        }
+
+        .floating-badge-info {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .floating-badge-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-dark);
+            letter-spacing: -0.2px;
+        }
+
+        .floating-badge-subtext {
+            font-size: 10px;
+            color: var(--text-medium);
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* ===== Features Section ===== */
+        .features {
+            padding: var(--section-padding);
+            background: var(--white);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--light-bg);
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary-blue);
+            box-shadow: var(--shadow-card-hover);
+            background: var(--white);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-blue-light), var(--primary-blue));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-icon svg {
+            width: 28px;
+            height: 28px;
+            color: var(--text-white);
+            stroke-width: 1.8;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .feature-description {
+            font-size: 16px;
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        /* ===== Testimonials Section ===== */
+        .testimonials {
+            padding: var(--section-padding);
+            background: var(--light-bg);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .testimonial-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            font-size: 72px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            opacity: 0.1;
+            line-height: 1;
+        }
+
+        .testimonial-stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .testimonial-stars span {
+            color: #fbbf24;
+            font-size: 18px;
+        }
+
+        .testimonial-quote {
+            font-size: 16px;
+            color: var(--text-medium);
+            line-height: 1.8;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue-light), var(--primary-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .testimonial-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .testimonial-info p {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* ===== CTA Section ===== */
+        .cta {
+            padding: 120px 0;
+            background: var(--cta-bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(66, 153, 225, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(66, 153, 225, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .cta .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-action-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .cta-price-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 32px 48px;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-price-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .cta-price-value {
+            font-size: 64px;
+            font-weight: 800;
+            color: var(--text-white);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .cta-price-value sup {
+            font-size: 28px;
+            vertical-align: super;
+            margin-right: 4px;
+        }
+
+        .cta-price-original {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: line-through;
+        }
+
+        .cta-price-savings {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: var(--text-white);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .btn-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--text-white);
+            color: var(--cta-bg);
+            padding: 20px 48px;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-cta svg {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-cta:hover svg {
+            transform: translateX(4px);
+        }
+
+        .cta-guarantee {
+            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+        }
+
+        .cta-guarantee-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .cta-guarantee-item svg {
+            width: 18px;
+            height: 18px;
+            color: #10b981;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            background: var(--footer-bg);
+            padding: 48px 0;
+        }
+
+        .footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-white);
+            letter-spacing: -0.5px;
+        }
+
+        .footer-logo span {
+            color: var(--primary-blue);
+        }
+
+        .footer-copyright {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            width: 42px;
+            height: 42px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--primary-blue);
+            color: var(--text-white);
+            transform: translateY(-2px);
+        }
+
+        .footer-social svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 1024px) {
+            .hero .container {
+                grid-template-columns: 1fr;
+                gap: 48px;
+                text-align: center;
+            }
+
+            .hero-content {
+                padding-right: 0;
+                order: 1;
+            }
+
+            .hero-visual {
+                order: 0;
+            }
+
+            .hero-description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-cta-group {
+                justify-content: center;
+            }
+
+            .hero-price-hint {
+                justify-content: center;
+            }
+
+            .hero-floating-badge.top-right {
+                right: 10px;
+            }
+
+            .hero-floating-badge.bottom-left {
+                left: 10px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            /* 在平板及以下尺寸采用垂直布局 */
+            .cta-action-group {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .cta-price-box {
+                max-width: 340px;
+            }
+
+            .btn-cta {
+                max-width: 340px;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 40px;
+            }
+
+            .hero-tagline {
+                font-size: 18px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .cta-title {
+                font-size: 32px;
+            }
+
+            .cta-title {
+                font-size: 28px;
+            }
+
+            /* 优化 CTA 区域布局：价格框和按钮垂直堆叠 */
+            .cta-action-group {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .cta-price-box {
+                width: 100%;
+                max-width: 300px;
+                padding: 24px 28px;
+            }
+
+            .cta-price-value {
+                font-size: 44px;
+            }
+
+            .btn-cta {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+                padding: 18px 40px;
+            }
+
+            .cta-guarantee {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .footer .container {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-floating-badge {
+                display: none;
+            }
+
+            .btn-cta {
+                padding: 16px 32px;
+                font-size: 16px;
+            }
+        }
+        /* ============================================
+           Scroll Reveal
+           ============================================ */
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children > * {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal-children.active > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children.active > *:nth-child(1) { transition-delay: 0.05s; }
+        .js .reveal-children.active > *:nth-child(2) { transition-delay: 0.1s; }
+        .js .reveal-children.active > *:nth-child(3) { transition-delay: 0.15s; }
+        .js .reveal-children.active > *:nth-child(4) { transition-delay: 0.2s; }
+        .js .reveal-children.active > *:nth-child(5) { transition-delay: 0.25s; }
+        .js .reveal-children.active > *:nth-child(6) { transition-delay: 0.3s; }
+
+        /* ============================================
+           Hero Light Orbs
+           ============================================ */
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(60px);
+        }
+
+        .hero-orb-1 {
+            width: 400px;
+            height: 400px;
+            top: -10%;
+            right: -5%;
+            background: rgba(66, 153, 225, 0.12);
+            animation: orb-drift 18s ease-in-out infinite;
+        }
+
+        .hero-orb-2 {
+            width: 250px;
+            height: 250px;
+            bottom: -5%;
+            left: 10%;
+            background: rgba(66, 153, 225, 0.08);
+            animation: orb-drift 14s ease-in-out infinite reverse;
+        }
+
+        @keyframes orb-drift {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(20px, -15px); }
+            66% { transform: translate(-15px, 20px); }
+        }
+
+        /* ============================================
+           Image Placeholder
+           ============================================ */
+        .hero-image {
+            background: linear-gradient(135deg, rgba(66, 153, 225, 0.06), rgba(49, 130, 206, 0.06));
+            border-radius: 20px;
+        }
+
+        /* ============================================
+           Hamburger Menu Toggle
+           ============================================ */
+        .navbar-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .navbar-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        @media (max-width: 768px) {
+            .navbar-toggle { display: flex; color: inherit; }
+            .navbar > .container, .navbar > div { flex-wrap: wrap; }
+            .navbar-links {
+                display: none;
+                order: 99;
+                flex-basis: 100%;
+                flex-direction: column;
+                padding: 12px 0 4px;
+                gap: 0;
+            }
+            .navbar-links a {
+                display: block;
+                padding: 12px 0;
+                font-size: 15px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            }
+            .navbar-links li { list-style: none; }
+            .navbar-links li:last-child a { border-bottom: none; }
+            .navbar.menu-open .navbar-links { display: flex; }
+            .navbar-cta {
+                margin-top: 8px;
+                display: block;
+                text-align: center;
+                background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+                color: var(--text-white) !important;
+                border: none;
+                font-size: 14px;
+                padding: 10px 24px;
+                border-radius: 50px;
+                box-shadow: 0 4px 14px rgba(66, 153, 225, 0.3);
+            }
+            .hero-orb { display: none; }
+        }
+    </style>
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar scrolled">
+        <div class="container">
+            <a href="#" class="navbar-brand">AURUM<span>AUDIO</span></a>
+            <button class="navbar-toggle" aria-label="菜单" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="navbar-links">
+                <li><a href="#features">产品特点</a></li>
+                <li><a href="#testimonials">用户评价</a></li>
+                <li><a href="#cta">购买</a></li>
+                <li><a href="#cta" class="navbar-cta">立即购买</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== Hero Section ===== -->
+    <section class="hero">
+        <div class="hero-orb hero-orb-1"></div>
+        <div class="hero-orb hero-orb-2"></div>
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-badge">新品首发</span>
+                <h1 class="hero-title">
+                    <span>AURUM ONE</span><br>
+                    旗舰降噪耳机
+                </h1>
+                <p class="hero-tagline">沉浸你的世界，聆听真实的自己</p>
+                <p class="hero-description">
+                    采用自适应主动降噪技术，搭载定制 50mm 钛合金振膜单元，
+                    40小时超长续航，让每一个音符都清晰呈现。专业调音，为音乐而生。
+                </p>
+                <div class="hero-cta-group">
+                    <a href="#cta" class="btn-primary">
+                        立即购买
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="#features" class="btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polygon points="10 8 16 12 10 16 10 8"/>
+                        </svg>
+                        观看视频
+                    </a>
+                </div>
+                <div class="hero-price-hint">
+                    <span class="hero-price">¥2,499</span>
+                    <span class="hero-price-original">¥3,299</span>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-image-wrapper">
+                    <img src="" alt="AURUM ONE 旗舰降噪耳机" class="hero-image" data-slot="hero" data-size="800x800">
+                </div>
+                <div class="hero-floating-badge top-right">
+                    <div class="floating-badge-content">
+                        <div class="floating-badge-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18V5l12-2v13"/>
+                                <circle cx="6" cy="18" r="3"/>
+                                <circle cx="18" cy="16" r="3"/>
+                            </svg>
+                        </div>
+                        <div class="floating-badge-info">
+                            <div class="floating-badge-text">Hi-Res 认证</div>
+                            <div class="floating-badge-subtext">高解析度音频</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-floating-badge bottom-left">
+                    <div class="floating-badge-content">
+                        <div class="floating-badge-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="6" width="18" height="12" rx="2" ry="2"/>
+                                <line x1="23" y1="13" x2="23" y2="11"/>
+                            </svg>
+                        </div>
+                        <div class="floating-badge-info">
+                            <div class="floating-badge-text">40小时续航</div>
+                            <div class="floating-badge-subtext">快充10分钟听3小时</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Features Section ===== -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">为什么选择 AURUM ONE</h2>
+                <p class="section-subtitle">
+                    每一个细节都经过精心打磨，只为带给你前所未有的听觉体验
+                </p>
+            </div>
+            <div class="features-grid reveal-children">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">自适应降噪</h3>
+                    <p class="feature-description">
+                        智能感知环境噪音，实时调整降噪深度，安静与安全兼得
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="2"/>
+                            <path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">50mm 钛振膜</h3>
+                    <p class="feature-description">
+                        定制钛合金振膜单元，频响范围 4Hz-40kHz，还原每个细节
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">40小时续航</h3>
+                    <p class="feature-description">
+                        超长续航满足一周使用，快充10分钟即可聆听3小时
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">云端舒适</h3>
+                    <p class="feature-description">
+                        记忆海绵耳罩，280g 轻量设计，长时间佩戴依然舒适
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Testimonials Section ===== -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">用户真实评价</h2>
+                <p class="section-subtitle">
+                    超过 50,000+ 用户的选择，听听他们怎么说
+                </p>
+            </div>
+            <div class="testimonials-grid reveal-children">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-quote">
+                        "降噪效果令人惊艳！在嘈杂的地铁里也能沉浸在自己的音乐世界中。
+                        音质细腻，低音下潜有力，中高频解析力出色。"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">L</div>
+                        <div class="testimonial-info">
+                            <h4>李明</h4>
+                            <p>音乐制作人</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-quote">
+                        "作为一个经常出差的人，40小时续航简直是救星。整个出差周期都不用担心充电，
+                        而且佩戴真的很舒适，长途飞行也不会感到压迫。"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">W</div>
+                        <div class="testimonial-info">
+                            <h4>王芳</h4>
+                            <p>商务顾问</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    </div>
+                    <p class="testimonial-quote">
+                        "外观设计简约大气，做工精细。自适应降噪功能很智能，
+                        在办公室能专注工作，走在路上又能感知环境，安全感满满。"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">Z</div>
+                        <div class="testimonial-info">
+                            <h4>张伟</h4>
+                            <p>软件工程师</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA Section ===== -->
+    <section class="cta" id="cta">
+        <div class="container reveal">
+            <h2 class="cta-title">开启你的沉浸式音乐之旅</h2>
+            <p class="cta-subtitle">
+                限时首发优惠，立省 ¥800，还享 24 期免息分期
+            </p>
+            <div class="cta-action-group">
+                <div class="cta-price-box">
+                    <span class="cta-price-label">限时特惠价</span>
+                    <div class="cta-price-value"><sup>¥</sup>2,499</div>
+                    <span class="cta-price-original">原价 ¥3,299</span>
+                    <span class="cta-price-savings">立省 ¥800</span>
+                </div>
+                <a href="#" class="btn-cta">
+                    立即下单
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="cta-guarantee">
+                <div class="cta-guarantee-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                        <path d="M3 3v5h5"/>
+                        <path d="M12 7v5l4 2"/>
+                    </svg>
+                    7天无理由退换
+                </div>
+                <div class="cta-guarantee-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                    2年官方质保
+                </div>
+                <div class="cta-guarantee-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="3" width="15" height="13" rx="2" ry="2"/>
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                        <circle cx="5.5" cy="18.5" r="2.5"/>
+                        <circle cx="18.5" cy="18.5" r="2.5"/>
+                    </svg>
+                    顺丰包邮
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-brand">
+                <div class="footer-logo">AURUM<span>AUDIO</span></div>
+            </div>
+            <p class="footer-copyright">© 2026 Aurum Audio. All rights reserved.</p>
+            <div class="footer-social">
+                <a href="#" aria-label="微信">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088v-.001c-.135-.01-.27-.022-.406-.033zm-2.53 3.274c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.969-.982z"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="微博">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.737 5.439l-.002.004zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.18.573h.014zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.579-.18-.4-.649.388-1.032.428-1.922-.003-2.559-.802-1.193-3.004-1.129-5.541-.034 0 0-.793.34-.59-.271.389-1.214.331-2.229-.275-2.816-1.372-1.336-5.02.048-8.15 3.09C.624 11.278 0 13.987 0 16.346c0 4.517 5.841 7.269 11.556 7.269 7.487 0 12.465-4.322 12.465-7.752 0-2.076-1.762-3.254-3.46-3.857l.002-.008zm1.343-5.2c-.649-.749-1.607-1.168-2.69-1.187l.007-.032c-.014 0-.026.004-.04.005a3.894 3.894 0 0 0-.404.015c-.278.021-.494.201-.494.201l.007-.007c-.136.103-.225.271-.225.461 0 .321.261.581.583.581.058 0 .114-.008.167-.024.168-.051.249-.104.589-.066.549.064.993.36 1.255.804.313.544.289 1.167.023 1.772-.053.12-.076.252-.076.392a.59.59 0 0 0 .586.585c.247 0 .461-.152.548-.367l.008-.02c.502-1.143.38-2.313-.34-3.149l-.004.036zm2.723-1.997c-1.225-1.424-3.025-2.2-5.066-2.191l.011-.052c-.036.002-.07.007-.106.009a.605.605 0 0 0-.579.583c0 .298.223.545.513.582.012.002.024.007.037.009l-.004-.003c1.6-.011 3.042.596 4.019 1.737.975 1.143 1.355 2.632 1.111 4.183.01.013.011.029.02.042l.026-.01a.59.59 0 0 0 .525.326.587.587 0 0 0 .585-.536c.085-.228.129-.471.129-.724 0-.271-.047-.542-.129-.794.328-1.921-.129-3.805-1.115-5.157l.023-.004z"/>
+                    </svg>
+                </a>
+                <a href="#" aria-label="抖音">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger 菜单切换
+        const navToggle = document.querySelector('.navbar-toggle, .nav-toggle');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navToggle.closest('nav').classList.toggle('menu-open');
+                navToggle.setAttribute('aria-expanded',
+                    navToggle.closest('nav').classList.contains('menu-open'));
+            });
+            navToggle.closest('nav').querySelectorAll('.navbar-links a, .nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.closest('nav').classList.remove('menu-open');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        // Navbar 滚动效果 (LP02 浅色背景页 - navbar默认scrolled)
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 60) {
+                navbar.classList.add('scrolled');
+            }
+            // LP02 navbar 始终保持 scrolled 状态因为背景是浅色
+        });
+
+        // Scroll Reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+        document.querySelectorAll('.reveal, .reveal-children').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>

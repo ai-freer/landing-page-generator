@@ -1,0 +1,82 @@
+---
+description: 浮动标签(floating badge)设计模式 - 用于 hero 图片区域的悬浮数据/特性标签
+globs: "**/template/**/*.html"
+alwaysApply: false
+---
+
+# 浮动标签设计模式
+
+Hero 图片区域的悬浮标签，用于在产品截图/产品图上叠加关键数据点或特性亮点。
+
+## 何时使用
+
+**不是所有 hero 都需要浮动标签**，仅在模板设计明确要求或任务需求指定时才添加。根据整体设计风格和内容需要来判断，不要默认添加、且谨慎使用该设计特征。
+
+## 设计原则
+
+1. **高透明玻璃质感**：背景使用极低透明度白色（约 `rgba(255,255,255,0.18)`），配合 `backdrop-filter: blur(20px) saturate(1.4)`，让底层图片隐约可见
+2. **阴影制造悬浮感**：多层阴影（近处浅 + 远处深）营造标签"漂浮"在图片上方的纵深感
+3. **边框极淡**：`border: 1px solid rgba(255,255,255,0.25)` 隐约勾勒轮廓
+4. **内容统一融入**：图标和文字**不带独立底色框**，直接融入标签内部，图标/文字是标签的一部分而非嵌套卡片
+5. **图标带主题色**：每个标签的图标使用自己的主题色（如绿色=增长、紫色=技术），文字保持深色可读
+6. **文字不用白色**：标签透明度高，底色浅时白字不可读；使用深色文字（`--text-primary` / `--text-tertiary`）
+7. **有机浮动动画**：不是简单上下平移，加入微量旋转角度变化更自然
+
+## CSS 参考（template-07 最终版）
+
+```css
+.hero-float-badge {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.10),
+        0 12px 40px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 有机浮动动画 */
+@keyframes floatGlass {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    30% { transform: translateY(-8px) rotate(-0.5deg); }
+    70% { transform: translateY(4px) rotate(0.3deg); }
+}
+
+/* 图标直接用主题色，无底色框 */
+.badge-icon svg { color: #2dbe6a; /* 或对应主题色 */ }
+
+/* 文字深色可读 */
+.badge-value { color: var(--text-primary); font-weight: 700; }
+.badge-label { color: var(--text-tertiary); font-size: 11px; }
+```
+
+## HTML 结构
+
+```html
+<div class="hero-float-badge">
+    <span class="badge-icon">
+        <svg><!-- 主题图标 --></svg>
+    </span>
+    <div class="badge-text">
+        <span class="badge-value">+47.2%</span>
+        <span class="badge-label">效率提升</span>
+    </div>
+</div>
+```
+
+## 对比：template-02 方案
+
+02 采用了类似但更轻量的方案（`rgba(255,255,255,0.3)` + `blur(4px)`），图标也是直接带色无底框，文字深色。两者方向一致，07 在透明度和阴影层次上更精细。
+
+## 常见错误
+
+- ❌ 白色文字 + 浅色透明底 = 看不清
+- ❌ 图标套独立底色框 = 嵌套感重，不融合
+- ❌ 实体白色背景卡片 = 生硬，无悬浮感
+- ❌ 简单上下平移动画 = 机械感

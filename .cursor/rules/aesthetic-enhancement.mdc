@@ -1,0 +1,138 @@
+---
+description: 美学增强六要素 - 所有着陆页 HTML 实现必须遵循的视觉提升规范
+globs: "**/template/**/*.html"
+alwaysApply: false
+---
+
+# 美学增强设计规范（Aesthetic Enhancement Spec）
+
+每个着陆页 HTML 在基础结构完成后，必须逐项检查以下六个美学增强要素。它们是从 LP01-LP06 的实践中提炼的通用设计原则。
+
+## 六要素速查
+
+| # | 要素 | 一句话描述 | 必需？ |
+|---|------|-----------|--------|
+| 1 | 固定导航 | 毛玻璃 / 半透明固定 Navbar，滚动后切换样式 | 必需（除非模板已自带） |
+| 2 | 移动端汉堡菜单 | ≤768px 折叠为三线汉堡按钮，点击展开下拉 | 必需 |
+| 3 | 滚动揭示 | IntersectionObserver 驱动的渐入动画 | 必需 |
+| 4 | Hero 装饰 | 浮动几何 / 有机形状，为 Hero 增加空间层次 | 推荐（视风格决定形态） |
+| 5 | 图片占位 | CSS 渐变背景作为 img 加载失败的降级 | 必需 |
+| 6 | JS 交互增强 | 平滑滚动 + Navbar 滚动检测 + 汉堡切换 + 可选计数器 | 必需 |
+
+## 设计原则
+
+### 1. 固定导航（Glassmorphism Navbar）
+
+> **注意**：固定导航必须搭配「要素 2：移动端汉堡菜单」一起实施。
+
+**目的**：提供持久的导航锚点，增强页面专业感。
+
+- `position: fixed; top: 0; z-index: 1000`
+- **结构**：内部容器使用页面共享的 `.container` 类（`<div class="container">`），确保导航内容与页面内容对齐
+- **CSS 位置**：Navbar CSS 放在 `<style>` 块的**顶部**（紧跟 `.container` 定义之后），不要放在 section CSS 之后
+- **CTA**：放在 `.navbar-links` 内作为最后一个 `<li>`，不要作为独立元素
+- 初始状态：透明或微弱渐变背景（暗色 Hero 用 `rgba(bg, 0.8)` 渐变；浅色 Hero 直接用 `scrolled` 态）
+- 滚动后（`scrolled` class）：`backdrop-filter: blur(16px)` + 微弱底部阴影
+- 过渡：`transition: all 0.3s ease`
+- **关键**：Hero 区必须有 `padding-top: ~80px` 为固定导航预留空间
+- 响应式：768px 以下隐藏导航链接和 CTA，汉堡菜单展开时下拉显示
+
+**风格适配**：
+- 浅色主题 → 白色半透明 `rgba(255,255,255,0.85)`
+- 深色主题 → 深色半透明 `rgba(bg-dark, 0.85)`
+- 赛博风 → 加发光边框 `box-shadow: 0 0 20px rgba(accent, 0.15)`
+
+### 2. 移动端汉堡菜单（Mobile Hamburger Menu）
+
+**目的**：在 ≤768px 宽度下提供可折叠导航，避免导航链接挤压消失。
+
+- 768px 以上：汉堡按钮 `display: none`，链接正常水平排列
+- 768px 以下：汉堡按钮 `display: flex`，链接隐藏，CTA 保留（或也隐藏）
+- 点击汉堡按钮：toggle `.menu-open` class → 链接以垂直下拉形式展开
+- 汉堡动画：三线 → X（`rotate(45deg)` + `opacity: 0` + `rotate(-45deg)`）
+- 关闭时机：点击导航链接后自动关闭
+
+**技术要点**：
+- 父容器使用 `.navbar > .container`（复用页面共享 `.container` 类），在 mobile 下设置 `flex-wrap: wrap`
+- CTA 放在 `.navbar-links` 内作为最后一个 `<li>`，移动端默认隐藏，菜单展开时显示
+- 链接列表设置 `order: 99; flex-basis: 100%` 使其自然换行到新一行
+- `.menu-open` 时 navbar 需要不透明背景（暗色 Hero 页面尤其重要）
+- 两套命名：`.navbar` 系列用 `.navbar-toggle`，`.nav` 系列用 `.nav-toggle`
+- `aria-label` 和 `aria-expanded` 确保无障碍
+
+**颜色适配**：
+- 暗色 Hero 页面：移动端强制不透明深色背景 + 浅色文字/图标
+- 浅色页面：继承 scrolled 态的白色背景 + 深色文字
+- 赛博风：汉堡图标用主题强调色（如 cyan）
+
+### 3. 滚动揭示动画（Scroll Reveal）
+
+**目的**：为页面赋予叙事节奏，引导用户注意力。
+
+- 使用 `IntersectionObserver`（非 scroll 事件），`threshold: 0.12`，`rootMargin: '0px 0px -60px 0px'`
+- 两种 class：
+  - `.reveal` — 单个元素渐入（用于 section-header、容器）
+  - `.reveal-children` — 子元素依次错位渐入（用于 grid 容器，子元素自动添加 `transition-delay`）
+- 初始态：`opacity: 0; transform: translateY(40px)`
+- 激活态：`opacity: 1; transform: translateY(0)`
+- 缓动：`cubic-bezier(0.16, 1, 0.3, 1)`，时长 0.8s
+- **必须**：在 `<head>` 尾部加 `<script>document.documentElement.classList.add('js');</script>` 作为 CSS 激活前提，确保无 JS 时内容可见
+- 子元素错位间隔：80ms（`.reveal-children.active > *:nth-child(N) { transition-delay: N*80ms }`）
+
+### 4. Hero 装饰元素（Hero Decorations）
+
+**目的**：打破平面感，营造空间纵深和视觉活力。
+
+- 使用 `position: absolute` + `pointer-events: none` 的装饰元素
+- 形态选择（按主题风格）：
+  - 经典/渐变 → 半透明圆形（`.hero-geo`），`border-radius: 50%`
+  - 赛博风 → 方形/多边形粒子（`.hero-particle`），`border-radius: 4px`
+  - 极简/白色 → 细线条（`.hero-line`），`width: 1px; height: 120px`
+  - 柔和/插画 → 软色有机形状（`.hero-orb`），大圆虚化
+- 动画：`@keyframes` 浮动动画，时长 6-12s，`ease-in-out`，`infinite`
+- 尺寸：大中小三个层级，分布在 Hero 不同位置
+- 透明度：0.06 ~ 0.15（绝对不能抢主内容的视线）
+
+### 5. 图片占位渐变（Image Placeholder）
+
+**目的**：图片未加载时保持设计一致性。
+
+- 为所有 `img` 元素的父容器或 `img` 自身添加 `background: linear-gradient(...)` 降级
+- 渐变色取自当前主题的主色调，透明度 0.05 ~ 0.10
+- 示例：`background: linear-gradient(135deg, rgba(primary, 0.08), rgba(secondary, 0.08))`
+
+### 6. JS 交互增强（JavaScript Enhancement）
+
+**目的**：提升页面的交互反馈和"活"的感觉。
+
+必需功能：
+- **Navbar 滚动检测**：`window.pageYOffset > 60` 时切换 `scrolled` class
+- **汉堡菜单切换**：toggle `.menu-open` + 更新 `aria-expanded`，点击链接后自动关闭
+- **平滑滚动**：所有 `a[href^="#"]` 锚点使用 `scrollIntoView({ behavior: 'smooth', block: 'start' })`
+- **Scroll Reveal Observer**：见要素 3
+
+可选功能（按需）：
+- **数字计数器**：Stats 区域数字从 0 滚动到目标值，使用 `requestAnimationFrame`，2s 时长，ease-out 缓动
+- **FAQ 折叠**：toggle `.active` class 控制展开/折叠
+
+## 实施检查清单
+
+创建或审查着陆页时，依次确认：
+
+```
+□ Navbar HTML 已注入 <body> 顶部
+□ Hamburger button 已注入 brand 与 links 之间
+□ Hero section 有足够的 padding-top（≥80px）
+□ .reveal / .reveal-children class 已添加到各内容区
+□ <head> 中有 js class 注入脚本
+□ Hero 装饰元素已添加（或已有等效装饰）
+□ 图片元素有渐变背景降级
+□ JS 包含：navbar 滚动 + 汉堡切换 + scroll reveal + 平滑锚点
+□ 移动端 768px：汉堡按钮可见，链接折叠，点击展开
+□ 移动端 navbar 有不透明背景（适配暗色/浅色主题）
+□ 所有锚点目标 section 有对应 id 属性
+```
+
+## 详细实现参考
+
+完整的 CSS/HTML/JS 代码模板见 `references/aesthetic-enhancement-guide.md`。

@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowMagic 流影 | 三步生成精彩视频</title>
+    <style>
+        /* ===== CSS Reset & Base Styles ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary - Purple */
+            --purple: #8B5CF6;
+            --purple-dark: #7C3AED;
+            --purple-deeper: #6D28D9;
+            --purple-light: #A78BFA;
+            --purple-lighter: #C4B5FD;
+            --purple-bg: #F5F3FF;
+            --purple-bg-subtle: #FAF5FF;
+
+            /* Accent */
+            --accent-pink: #EC4899;
+            --accent-teal: #14B8A6;
+            --accent-amber: #F59E0B;
+
+            /* White */
+            --white: #ffffff;
+
+            /* Text */
+            --text-primary: #1E1B4B;
+            --text-secondary: #4C4669;
+            --text-tertiary: #7C7494;
+            --text-light: #A5A0B8;
+            --text-white: #ffffff;
+            --text-on-purple: #EDE9FE;
+
+            /* Backgrounds */
+            --bg-page: #FAFAFE;
+            --bg-hero: linear-gradient(180deg, #F5F3FF 0%, #FAFAFE 100%);
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(139, 92, 246, 0.06);
+            --shadow-md: 0 4px 16px rgba(139, 92, 246, 0.08);
+            --shadow-lg: 0 8px 32px rgba(139, 92, 246, 0.1);
+            --shadow-xl: 0 16px 48px rgba(139, 92, 246, 0.12);
+            --shadow-card: 0 4px 24px rgba(139, 92, 246, 0.06);
+            --shadow-card-hover: 0 12px 40px rgba(139, 92, 246, 0.14);
+
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif;
+
+            /* Spacing */
+            --section-padding: 120px 0;
+            --container-max-width: 1200px;
+
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+
+            /* Frame */
+            --frame-border: 4px solid #8B5CF6;
+            --frame-border-light: 3px solid #8B5CF6;
+            --frame-radius: 20px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            background: var(--bg-page);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== Container ===== */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(36px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        
+
+        /* ===== Navigation ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 18px 0;
+            background: rgba(245, 243, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .nav.scrolled {
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 2px 20px rgba(139, 92, 246, 0.06);
+        }
+
+        .nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-brand svg {
+            width: 34px;
+            height: 34px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--purple);
+        }
+
+        .nav-cta {
+            background: var(--purple) !important;
+            color: var(--text-white) !important;
+            padding: 10px 28px;
+            border-radius: var(--radius-full);
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-cta:hover {
+            background: var(--purple-dark) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 24px rgba(139, 92, 246, 0.4) !important;
+        }
+
+        /* ===== Hero Section - Split Layout with Framed Image ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: var(--bg-hero);
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-deco-1 {
+            position: absolute;
+            top: 15%;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-deco-2 {
+            position: absolute;
+            bottom: 10%;
+            right: -80px;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-deco-dot-1 {
+            position: absolute;
+            top: 40%;
+            right: 25%;
+            width: 8px;
+            height: 8px;
+            background: var(--purple);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .hero-deco-dot-2 {
+            position: absolute;
+            top: 25%;
+            left: 15%;
+            width: 6px;
+            height: 6px;
+            background: var(--purple-dark);
+            border-radius: 50%;
+            opacity: 0.25;
+            animation: pulse 4s ease-in-out infinite 1s;
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            animation: fadeInLeft 0.8s ease-out;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            color: var(--purple);
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 28px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+            color: var(--text-primary);
+        }
+
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.8;
+            max-width: 480px;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--purple);
+            color: var(--text-white);
+            padding: 16px 36px;
+            border-radius: var(--radius-full);
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 24px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--purple-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 36px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-primary svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary:hover svg {
+            transform: translateX(3px);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--white);
+            color: var(--text-primary);
+            padding: 15px 32px;
+            border-radius: var(--radius-full);
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid var(--purple);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--purple-bg);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Framed Image */
+        .hero-image {
+            position: relative;
+            animation: fadeInRight 0.8s ease-out 0.2s both;
+        }
+
+        .hero-image-frame {
+            border: var(--frame-border);
+            border-radius: var(--frame-radius);
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow-xl);
+            background: var(--white);
+        }
+
+        .hero-image-frame img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Hero Stats Strip - below framed image */
+        .hero-stats-strip {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--white);
+            border: 1.5px solid rgba(139, 92, 246, 0.15);
+            border-radius: var(--radius-full);
+            padding: 8px 18px;
+            transition: all 0.3s ease;
+        }
+
+        .hero-stat:hover {
+            border-color: var(--purple);
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .hero-stat-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .hero-stat-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hero-stat:nth-child(1) .hero-stat-icon svg { color: var(--purple); }
+        .hero-stat:nth-child(2) .hero-stat-icon svg { color: var(--accent-pink); }
+        .hero-stat:nth-child(3) .hero-stat-icon svg { color: var(--accent-teal); }
+
+        .hero-stat-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        .hero-stat-text span {
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        /* ===== Connected Flow Section ===== */
+        .connected-flow {
+            padding: var(--section-padding);
+            background: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .connected-flow .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-eyebrow {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--purple);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 44px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 540px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* SVG Connection Path Layer */
+        .connection-path-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .connection-path-layer svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Flow Steps */
+        .flow-steps {
+            position: relative;
+            z-index: 1;
+        }
+
+        .flow-step {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            margin-bottom: 120px;
+        }
+
+        .flow-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .flow-step.reverse .flow-step-content {
+            order: 2;
+        }
+
+        .flow-step.reverse .flow-step-image {
+            order: 1;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--purple);
+            color: var(--text-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3);
+        }
+
+        .step-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+        }
+
+        .flow-step-title {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+        }
+
+        .flow-step-description {
+            font-size: 17px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+
+        .flow-step-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .flow-step-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .flow-step-features li svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            color: var(--purple);
+        }
+
+        /* Framed Illustration */
+        .flow-step-image {
+            position: relative;
+        }
+
+        .framed-illustration {
+            border: var(--frame-border-light);
+            border-radius: var(--frame-radius);
+            overflow: hidden;
+            background: var(--white);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.4s ease;
+        }
+
+        .framed-illustration:hover {
+            box-shadow: var(--shadow-xl);
+            transform: scale(1.02);
+        }
+
+        .framed-illustration img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* ===== FAQ Section - Collapsible ===== */
+        .faq {
+            padding: var(--section-padding);
+            background: var(--bg-page);
+            position: relative;
+        }
+
+        .faq .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .faq-item {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            border: 2px solid #E5E7EB;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .faq-item.active {
+            border-color: var(--purple);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 28px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            transition: color 0.3s ease;
+            gap: 16px;
+        }
+
+        .faq-question:hover {
+            color: var(--purple);
+        }
+
+        .faq-toggle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .faq-toggle svg {
+            width: 16px;
+            height: 16px;
+            color: var(--purple);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-toggle {
+            background: var(--purple);
+        }
+
+        .faq-item.active .faq-toggle svg {
+            color: white;
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer-content {
+            padding: 0 28px 24px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* ===== Fat Footer ===== */
+        .footer {
+            background: var(--purple-dark);
+            padding: 72px 0 44px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 56px;
+        }
+
+        .footer-brand-area {
+            max-width: 320px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 14px;
+            text-decoration: none;
+        }
+
+        .footer-brand svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .footer-tagline {
+            font-size: 14px;
+            color: var(--text-on-purple);
+            line-height: 1.8;
+            opacity: 0.8;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 56px;
+        }
+
+        .footer-link-group h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-link-group ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-link-group a {
+            text-decoration: none;
+            color: var(--text-on-purple);
+            font-size: 14px;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .footer-link-group a:hover {
+            opacity: 1;
+            color: var(--text-white);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .footer-copyright {
+            font-size: 13px;
+            color: var(--text-on-purple);
+            opacity: 0.6;
+        }
+
+        /* ===== Scroll Reveal ===== */
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 1024px) {
+            .hero .container {
+                gap: 40px;
+            }
+
+            .hero-title {
+                font-size: 44px;
+            }
+
+            .flow-step {
+                gap: 48px;
+            }
+
+            .flow-step-title {
+                font-size: 34px;
+            }
+
+            .section-title {
+                font-size: 38px;
+            }
+
+            .footer-links {
+                gap: 36px;
+            }
+        }
+
+        /* ============================================
+           Hamburger Menu Toggle
+           ============================================ */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .nav-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .nav.menu-open .nav-toggle span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .nav.menu-open .nav-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+        .nav.menu-open .nav-toggle span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --section-padding: 80px 0;
+            }
+
+            .nav-toggle { display: flex; color: inherit; }
+            .nav > .container, .nav > div { flex-wrap: wrap; }
+            .nav-links {
+                display: none;
+                order: 99;
+                flex-basis: 100%;
+                flex-direction: column;
+                padding: 12px 0 4px;
+                gap: 0;
+            }
+            .nav-links a {
+                display: block;
+                padding: 12px 0;
+                font-size: 15px;
+                border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+            }
+            .nav-links li { list-style: none; }
+            .nav-links li:last-child a { border-bottom: none; }
+            .nav.menu-open .nav-links { display: flex; }
+
+            .hero {
+                padding-top: 100px;
+                padding-bottom: 60px;
+            }
+
+            .hero .container {
+                grid-template-columns: 1fr;
+                gap: 48px;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 38px;
+                letter-spacing: -1px;
+            }
+
+            .hero-subtitle {
+                margin-left: auto;
+                margin-right: auto;
+                font-size: 16px;
+            }
+
+            .hero-cta-group {
+                justify-content: center;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .hero-trust {
+                justify-content: center;
+            }
+
+            .hero-stats-strip {
+                gap: 8px;
+            }
+
+            .hero-stat {
+                padding: 6px 14px;
+                font-size: 12px;
+            }
+
+            /* Hide connection paths on mobile */
+            .connection-path-layer {
+                display: none;
+            }
+
+            .flow-step {
+                grid-template-columns: 1fr;
+                gap: 36px;
+                margin-bottom: 80px;
+            }
+
+            .flow-step.reverse .flow-step-content {
+                order: 1;
+            }
+
+            .flow-step.reverse .flow-step-image {
+                order: 2;
+            }
+
+            .flow-step-title {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .faq-question {
+                padding: 18px 20px;
+                font-size: 15px;
+            }
+
+            .faq-answer-content {
+                padding: 0 20px 20px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 36px;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-brand-area {
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 28px;
+                align-items: center;
+            }
+
+            .footer-link-group {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 30px;
+            }
+
+            .flow-step-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+    <!-- ===== Navigation ===== -->
+    <nav class="nav">
+        <div class="container">
+            <a href="#" class="nav-brand">
+                <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="34" height="34" rx="9" fill="url(#navGrad09)" opacity="0.15"/>
+                    <path d="M9 12L17 8L25 12V18L17 26L9 18V12Z" stroke="url(#navGrad09)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="17" cy="16" r="3" stroke="#8B5CF6" stroke-width="2"/>
+                    <path d="M17 13V8" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+                    <path d="M20.5 17.5L25 18" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+                    <path d="M13.5 17.5L9 18" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+                    <defs>
+                        <linearGradient id="navGrad09" x1="0" y1="0" x2="34" y2="34">
+                            <stop stop-color="#8B5CF6"/>
+                            <stop offset="1" stop-color="#EC4899"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                FlowMagic
+            </a>
+            <button class="nav-toggle" aria-label="菜单" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links">
+                <li><a href="#steps">三步流程</a></li>
+                <li><a href="#faq">常见问题</a></li>
+                <li><a href="#" class="nav-cta">免费开始</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== Hero Section - Split Layout with Framed Image ===== -->
+    <section class="hero">
+        <div class="hero-deco-1"></div>
+        <div class="hero-deco-2"></div>
+        <div class="hero-deco-dot-1"></div>
+        <div class="hero-deco-dot-2"></div>
+
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                    全新 AI 引擎 · 三步出片
+                </span>
+
+                <h1 class="hero-title">
+                    三步生成<br>
+                    <span class="gradient-text">精彩视频</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    FlowMagic 是新一代 AI 视频生成工具。输入文本、选择风格、一键生成——
+                    从创意到成片，只需三步，让每个人都能成为视频创作者。
+                </p>
+
+                <div class="hero-cta-group">
+                    <a href="#" class="btn-primary">
+                        免费试用
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="#steps" class="btn-secondary">
+                        查看流程
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <div class="hero-image-frame">
+                    <img src="" alt="FlowMagic 视频生成工具界面" data-slot="hero" data-size="800x600">
+                </div>
+                <div class="hero-stats-strip">
+                    <div class="hero-stat">
+                        <span class="hero-stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="23 7 16 12 23 17 23 7"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                        </span>
+                        <span class="hero-stat-text">4K <span>高清</span></span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </span>
+                        <span class="hero-stat-text">3 min <span>出片</span></span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </span>
+                        <span class="hero-stat-text">50K+ <span>创作者</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Connected Flow Section ===== -->
+    <section class="connected-flow" id="steps">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-eyebrow">简单三步</p>
+                <h2 class="section-title">像搭积木一样做视频</h2>
+                <p class="section-subtitle">
+                    不需要剪辑经验，不需要设计功底。跟着三个步骤，你的创意就能变成精彩视频。
+                </p>
+            </div>
+
+            <!-- SVG Connection Path Layer -->
+            <div class="connection-path-layer" id="connectionPaths">
+                <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Paths will be drawn dynamically by JS -->
+                </svg>
+            </div>
+
+            <div class="flow-steps">
+                <!-- Step 1: Input (Text Left, Image Right) -->
+                <div class="flow-step reveal" id="step-1">
+                    <div class="flow-step-content">
+                        <div class="step-indicator">
+                            <div class="step-number">1</div>
+                            <span class="step-label">输入创意</span>
+                        </div>
+                        <h2 class="flow-step-title">写下你的<br>故事脚本</h2>
+                        <p class="flow-step-description">
+                            用自然语言描述你想要的视频内容——场景、角色、旁白、节奏，甚至情绪基调。
+                            FlowMagic 的 AI 引擎会理解你的每一个细节。
+                        </p>
+                        <ul class="flow-step-features">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                支持中文 / 英文 / 日文输入
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                智能分镜自动拆解
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                可上传参考图/视频辅助创作
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="flow-step-image">
+                        <div class="framed-illustration">
+                            <img src="" alt="输入创意脚本" data-slot="step" data-size="400x300">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Style (Image Left, Text Right) -->
+                <div class="flow-step reverse reveal" id="step-2">
+                    <div class="flow-step-content">
+                        <div class="step-indicator">
+                            <div class="step-number">2</div>
+                            <span class="step-label">选择风格</span>
+                        </div>
+                        <h2 class="flow-step-title">挑选你喜欢的<br>视觉风格</h2>
+                        <p class="flow-step-description">
+                            从 50+ 种预设视觉风格中选择——2D 动画、3D 写实、水彩插画、赛博朋克……
+                            或者上传参考图，AI 会学习并复刻你要的风格。
+                        </p>
+                        <ul class="flow-step-features">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                50+ 预设风格开箱即用
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                自定义风格训练
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                实时风格预览
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="flow-step-image">
+                        <div class="framed-illustration">
+                            <img src="" alt="选择视觉风格" data-slot="step" data-size="400x300">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Generate (Text Left, Image Right) -->
+                <div class="flow-step reveal" id="step-3">
+                    <div class="flow-step-content">
+                        <div class="step-indicator">
+                            <div class="step-number">3</div>
+                            <span class="step-label">一键生成</span>
+                        </div>
+                        <h2 class="flow-step-title">点击生成，<br>坐等出片</h2>
+                        <p class="flow-step-description">
+                            一切就绪后，点击"生成视频"，FlowMagic 的 AI 会在几分钟内完成渲染。
+                            支持 1080p / 4K 输出，可直接分享到各大平台。
+                        </p>
+                        <ul class="flow-step-features">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                平均 3 分钟完成渲染
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                最高支持 4K 60fps 输出
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                一键发布到抖音/B站/YouTube
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="flow-step-image">
+                        <div class="framed-illustration">
+                            <img src="" alt="一键生成视频" data-slot="step" data-size="400x300">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FAQ Section - Card Style ===== -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-eyebrow">常见问题</p>
+                <h2 class="section-title">关于 FlowMagic 的常见问题</h2>
+                <p class="section-subtitle">
+                    如果没有找到你的问题，欢迎联系我们的支持团队
+                </p>
+            </div>
+            <div class="faq-list reveal">
+                <div class="faq-item active">
+                    <button class="faq-question">
+                        FlowMagic 生成的视频有水印吗？
+                        <span class="faq-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            免费版会带有小水印，Pro 版及以上用户可以去除水印，并获得无限次 4K 输出。
+                            所有付费方案均支持商用授权，生成的视频版权归你所有。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        一个视频最长可以生成多久？
+                        <span class="faq-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            目前单次生成支持最长 5 分钟的视频。你也可以生成多个片段后使用内置编辑器拼接，
+                            理论上没有时长限制。我们正在开发支持更长视频的生成能力。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        可以对生成的视频进行二次编辑吗？
+                        <span class="faq-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            当然可以。FlowMagic 内置了时间线编辑器，你可以对每个镜头进行微调——
+                            修改画面、替换配乐、调整节奏。也支持导出到 Premiere / DaVinci Resolve 继续编辑。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        支持哪些语言的配音？
+                        <span class="faq-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            FlowMagic 内置了 30+ 种语言的 AI 配音引擎，包括中文（普通话/粤语）、
+                            英文、日文、韩文等。每种语言有多种音色可选，也支持上传自己的声音进行克隆。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        团队可以一起协作吗？
+                        <span class="faq-toggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            Team 版支持多人协作。团队成员可以共享项目、评论片段、分配任务，
+                            还有版本管理功能，确保每次修改都可追溯。非常适合内容团队和创意工作室使用。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Fat Footer ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand-area">
+                    <a href="#" class="footer-brand">
+                        <svg viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="34" height="34" rx="9" fill="rgba(255,255,255,0.15)"/>
+                            <path d="M9 12L17 8L25 12V18L17 26L9 18V12Z" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="17" cy="16" r="3" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
+                            <path d="M17 13V8" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+                            <path d="M20.5 17.5L25 18" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+                            <path d="M13.5 17.5L9 18" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+                        </svg>
+                        FlowMagic
+                    </a>
+                    <p class="footer-tagline">三步生成精彩视频。<br>让每个人都能成为视频创作者。</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-link-group">
+                        <h4>产品</h4>
+                        <ul>
+                            <li><a href="#">功能介绍</a></li>
+                            <li><a href="#">定价方案</a></li>
+                            <li><a href="#">更新日志</a></li>
+                            <li><a href="#">API 文档</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-link-group">
+                        <h4>帮助</h4>
+                        <ul>
+                            <li><a href="#">帮助中心</a></li>
+                            <li><a href="#">视频教程</a></li>
+                            <li><a href="#">创作指南</a></li>
+                            <li><a href="#">社区论坛</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-link-group">
+                        <h4>服务</h4>
+                        <ul>
+                            <li><a href="#">关于我们</a></li>
+                            <li><a href="#">联系客服</a></li>
+                            <li><a href="#">商务合作</a></li>
+                            <li><a href="#">隐私政策</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2026 FlowMagic. All rights reserved. 三步生成精彩视频。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== Scripts ===== -->
+    <script>
+        // Hamburger 菜单切换
+        const navToggle = document.querySelector('.navbar-toggle, .nav-toggle');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navToggle.closest('nav').classList.toggle('menu-open');
+                navToggle.setAttribute('aria-expanded',
+                    navToggle.closest('nav').classList.contains('menu-open'));
+            });
+            navToggle.closest('nav').querySelectorAll('.navbar-links a, .nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.closest('nav').classList.remove('menu-open');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        });
+
+        // Nav scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll Reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Draw Connection Paths (SVG dashed lines between steps)
+        function drawConnectionPaths() {
+            const pathLayer = document.getElementById('connectionPaths');
+            if (!pathLayer || window.innerWidth < 769) return;
+
+            const svg = pathLayer.querySelector('svg');
+            const section = document.querySelector('.connected-flow');
+            const sectionRect = section.getBoundingClientRect();
+
+            const step1Img = document.querySelector('#step-1 .framed-illustration');
+            const step2Img = document.querySelector('#step-2 .framed-illustration');
+            const step3Img = document.querySelector('#step-3 .framed-illustration');
+
+            if (!step1Img || !step2Img || !step3Img) return;
+
+            const getRelPos = (el) => {
+                const r = el.getBoundingClientRect();
+                return {
+                    cx: r.left - sectionRect.left + r.width / 2,
+                    top: r.top - sectionRect.top,
+                    bottom: r.top - sectionRect.top + r.height,
+                    left: r.left - sectionRect.left,
+                    right: r.left - sectionRect.left + r.width
+                };
+            };
+
+            const pos1 = getRelPos(step1Img);
+            const pos2 = getRelPos(step2Img);
+            const pos3 = getRelPos(step3Img);
+
+            svg.setAttribute('viewBox', `0 0 ${sectionRect.width} ${sectionRect.height}`);
+            svg.setAttribute('width', sectionRect.width);
+            svg.setAttribute('height', sectionRect.height);
+
+            // Path from step1 image bottom to step2 image top
+            const path1StartX = pos1.cx;
+            const path1StartY = pos1.bottom + 10;
+            const path1EndX = pos2.cx;
+            const path1EndY = pos2.top - 10;
+            const path1MidY = (path1StartY + path1EndY) / 2;
+
+            // Path from step2 image bottom to step3 image top
+            const path2StartX = pos2.cx;
+            const path2StartY = pos2.bottom + 10;
+            const path2EndX = pos3.cx;
+            const path2EndY = pos3.top - 10;
+            const path2MidY = (path2StartY + path2EndY) / 2;
+
+            svg.innerHTML = `
+                <path d="M ${path1StartX} ${path1StartY}
+                         C ${path1StartX} ${path1MidY},
+                           ${path1EndX} ${path1MidY},
+                           ${path1EndX} ${path1EndY}"
+                      fill="none"
+                      stroke="#8B5CF6"
+                      stroke-width="2.5"
+                      stroke-dasharray="10,10"
+                      opacity="0.25"
+                      stroke-linecap="round"/>
+                <path d="M ${path2StartX} ${path2StartY}
+                         C ${path2StartX} ${path2MidY},
+                           ${path2EndX} ${path2MidY},
+                           ${path2EndX} ${path2EndY}"
+                      fill="none"
+                      stroke="#8B5CF6"
+                      stroke-width="2.5"
+                      stroke-dasharray="10,10"
+                      opacity="0.25"
+                      stroke-linecap="round"/>
+            `;
+        }
+
+        // Draw paths on load and resize
+        window.addEventListener('load', () => {
+            setTimeout(drawConnectionPaths, 300);
+        });
+        window.addEventListener('resize', drawConnectionPaths);
+    </script>
+</body>
+</html>

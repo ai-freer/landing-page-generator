@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindFlow 心流笔记 | 让灵感自由流淌</title>
+    <style>
+        /* ===== CSS Reset & Base Styles ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Soft Palette */
+            --peach: #FFB088;
+            --peach-light: #FFD4BC;
+            --lavender: #C4B5FD;
+            --lavender-light: #E0D8FF;
+            --mint: #86EFAC;
+            --mint-light: #BBF7D0;
+            --sky: #93C5FD;
+            --sky-light: #BFDBFE;
+            --rose: #FDA4AF;
+            --rose-light: #FECDD3;
+            --sand: #F5E6D3;
+
+            /* Background & Surface */
+            --bg-primary: #FFFBF7;
+            --bg-section-alt: #FFF8F2;
+            --bg-card: #FFFFFF;
+            --bg-faq: #FEF7F0;
+
+            /* Text */
+            --text-primary: #2D2B3D;
+            --text-secondary: #6B6880;
+            --text-tertiary: #9794A8;
+            --text-white: #FFFFFF;
+
+            /* Gradients */
+            --gradient-hero: linear-gradient(135deg, #FFB088 0%, #C4B5FD 50%, #93C5FD 100%);
+            --gradient-peach-lavender: linear-gradient(135deg, #FFB088, #C4B5FD);
+            --gradient-mint-sky: linear-gradient(135deg, #86EFAC, #93C5FD);
+            --gradient-rose-peach: linear-gradient(135deg, #FDA4AF, #FFB088);
+
+            /* Shadows */
+            --shadow-soft: 0 4px 24px rgba(45, 43, 61, 0.06);
+            --shadow-medium: 0 8px 40px rgba(45, 43, 61, 0.08);
+            --shadow-card: 0 2px 16px rgba(45, 43, 61, 0.05);
+            --shadow-hover: 0 12px 48px rgba(45, 43, 61, 0.12);
+
+            /* Typography */
+            --font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif;
+
+            /* Spacing */
+            --section-padding: 120px 0;
+            --container-max-width: 1140px;
+
+            /* Radius */
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 28px;
+            --radius-xl: 40px;
+            --radius-full: 9999px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== Container ===== */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 28px;
+        }
+
+        /* ===== Animations ===== */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes floatDelayed {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(32px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes drawLine {
+            from { stroke-dashoffset: 200; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ===== Decorative SVG Elements ===== */
+        .deco-blob {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.12;
+        }
+
+        .deco-squiggle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== Navigation ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+            background: rgba(255, 251, 247, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(45, 43, 61, 0.05);
+        }
+
+        .nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-brand svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-cta {
+            background: var(--gradient-peach-lavender);
+            color: var(--text-white) !important;
+            padding: 10px 26px;
+            border-radius: var(--radius-full);
+            font-weight: 600 !important;
+            transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+            box-shadow: 0 4px 16px rgba(255, 176, 136, 0.3);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(255, 176, 136, 0.4) !important;
+        }
+
+        /* ===== Hero Section ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+            background: var(--bg-primary);
+        }
+
+        /* Soft decorative shapes */
+        .hero-deco-circle-1 {
+            position: absolute;
+            top: 10%;
+            left: -80px;
+            width: 260px;
+            height: 260px;
+            background: var(--peach-light);
+            border-radius: 50%;
+            opacity: 0.25;
+            filter: blur(40px);
+            animation: floatSlow 8s ease-in-out infinite;
+        }
+
+        .hero-deco-circle-2 {
+            position: absolute;
+            bottom: 15%;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: var(--lavender-light);
+            border-radius: 50%;
+            opacity: 0.3;
+            filter: blur(30px);
+            animation: floatDelayed 10s ease-in-out infinite;
+        }
+
+        .hero-deco-circle-3 {
+            position: absolute;
+            top: 25%;
+            right: 10%;
+            width: 120px;
+            height: 120px;
+            background: var(--mint-light);
+            border-radius: 50%;
+            opacity: 0.2;
+            filter: blur(25px);
+            animation: floatSlow 12s ease-in-out infinite;
+        }
+
+        /* Hand-drawn squiggle decorations */
+        .hero-squiggle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-squiggle-1 {
+            top: 18%;
+            left: 8%;
+            animation: wiggle 6s ease-in-out infinite;
+        }
+
+        .hero-squiggle-2 {
+            bottom: 22%;
+            right: 6%;
+            animation: wiggle 8s ease-in-out infinite reverse;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-tagline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(255,176,136,0.12), rgba(196,181,253,0.12));
+            border: 1px solid rgba(255,176,136,0.2);
+            color: var(--text-secondary);
+            padding: 8px 22px;
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 28px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-tagline svg {
+            width: 16px;
+            height: 16px;
+            color: var(--peach);
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 44px;
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 64px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gradient-peach-lavender);
+            color: var(--text-white);
+            padding: 16px 38px;
+            border-radius: var(--radius-full);
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 6px 24px rgba(255, 176, 136, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 36px rgba(255, 176, 136, 0.4);
+        }
+
+        .btn-primary svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary:hover svg {
+            transform: translateX(3px);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 15px 34px;
+            border-radius: var(--radius-full);
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1.5px solid rgba(45, 43, 61, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--lavender);
+            box-shadow: var(--shadow-soft);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Illustration */
+        .hero-illustration {
+            max-width: 680px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero-illustration img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--radius-lg);
+            animation: scaleIn 0.8s ease-out;
+        }
+
+        /* Floating doodle elements around hero image */
+        .hero-doodle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .hero-doodle-star {
+            top: -20px;
+            right: -30px;
+            animation: floatSlow 5s ease-in-out infinite;
+        }
+
+        .hero-doodle-heart {
+            bottom: 20px;
+            left: -40px;
+            animation: floatDelayed 7s ease-in-out infinite;
+        }
+
+        .hero-doodle-sparkle {
+            top: 40%;
+            right: -50px;
+            animation: wiggle 4s ease-in-out infinite;
+        }
+
+        /* ===== Zig-Zag Value Props ===== */
+        .zigzag {
+            padding: var(--section-padding);
+            position: relative;
+        }
+
+        .zigzag-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            margin-bottom: 100px;
+        }
+
+        .zigzag-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .zigzag-section.reverse .zigzag-content {
+            order: 2;
+        }
+
+        .zigzag-section.reverse .zigzag-image {
+            order: 1;
+        }
+
+        .zigzag-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .zigzag-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            padding: 6px 16px;
+            border-radius: var(--radius-full);
+        }
+
+        .zigzag-label.peach {
+            color: #D97706;
+            background: rgba(255, 176, 136, 0.15);
+        }
+
+        .zigzag-label.lavender {
+            color: #7C3AED;
+            background: rgba(196, 181, 253, 0.15);
+        }
+
+        .zigzag-label.mint {
+            color: #059669;
+            background: rgba(134, 239, 172, 0.15);
+        }
+
+        .zigzag-title {
+            font-size: 38px;
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+        }
+
+        .zigzag-description {
+            font-size: 17px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .zigzag-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .zigzag-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .zigzag-features li svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .zigzag-features li .check-peach { color: var(--peach); }
+        .zigzag-features li .check-lavender { color: var(--lavender); }
+        .zigzag-features li .check-mint { color: var(--mint); }
+
+        .zigzag-image {
+            position: relative;
+        }
+
+        .zigzag-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-medium);
+            transition: transform 0.4s ease;
+        }
+
+        .zigzag-image:hover img {
+            transform: scale(1.02);
+        }
+
+        /* Decorative dots behind zigzag images */
+        .zigzag-image::before {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            opacity: 0.15;
+            z-index: -1;
+            filter: blur(2px);
+        }
+
+        .zigzag-section:nth-child(1) .zigzag-image::before {
+            top: -30px;
+            right: -30px;
+            background: var(--peach);
+        }
+
+        .zigzag-section:nth-child(2) .zigzag-image::before {
+            bottom: -30px;
+            left: -30px;
+            background: var(--lavender);
+        }
+
+        .zigzag-section:nth-child(3) .zigzag-image::before {
+            top: -30px;
+            left: -30px;
+            background: var(--mint);
+        }
+
+        /* ===== Feature Grid Section ===== */
+        .features {
+            padding: var(--section-padding);
+            background: var(--bg-section-alt);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(196, 181, 253, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 72px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-eyebrow {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--lavender);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 44px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 36px 28px;
+            border: 1px solid rgba(45, 43, 61, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:nth-child(1)::after,
+        .feature-card:nth-child(4)::after { background: var(--gradient-peach-lavender); }
+        .feature-card:nth-child(2)::after,
+        .feature-card:nth-child(5)::after { background: var(--gradient-mint-sky); }
+        .feature-card:nth-child(3)::after,
+        .feature-card:nth-child(6)::after { background: var(--gradient-rose-peach); }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: transparent;
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+
+        .feature-icon-wrapper {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-card:nth-child(1) .feature-icon-wrapper,
+        .feature-card:nth-child(4) .feature-icon-wrapper {
+            background: rgba(255, 176, 136, 0.12);
+        }
+        .feature-card:nth-child(2) .feature-icon-wrapper,
+        .feature-card:nth-child(5) .feature-icon-wrapper {
+            background: rgba(134, 239, 172, 0.12);
+        }
+        .feature-card:nth-child(3) .feature-icon-wrapper,
+        .feature-card:nth-child(6) .feature-icon-wrapper {
+            background: rgba(253, 164, 175, 0.12);
+        }
+
+        .feature-icon-wrapper svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .feature-card:nth-child(1) svg,
+        .feature-card:nth-child(4) svg { color: var(--peach); }
+        .feature-card:nth-child(2) svg,
+        .feature-card:nth-child(5) svg { color: var(--mint); }
+        .feature-card:nth-child(3) svg,
+        .feature-card:nth-child(6) svg { color: var(--rose); }
+
+        .feature-title {
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== Testimonials Section ===== */
+        .testimonials {
+            padding: var(--section-padding);
+            background: var(--bg-primary);
+            position: relative;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .testimonial-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 36px 30px;
+            border: 1px solid rgba(45, 43, 61, 0.06);
+            box-shadow: var(--shadow-card);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Hand-drawn quote decoration */
+        .testimonial-quote-mark {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .testimonial-card:nth-child(1) .testimonial-quote-mark { color: var(--peach-light); }
+        .testimonial-card:nth-child(2) .testimonial-quote-mark { color: var(--lavender-light); }
+        .testimonial-card:nth-child(3) .testimonial-quote-mark { color: var(--mint-light); }
+
+        .testimonial-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 28px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-white);
+            flex-shrink: 0;
+        }
+
+        .testimonial-card:nth-child(1) .testimonial-avatar { background: var(--gradient-peach-lavender); }
+        .testimonial-card:nth-child(2) .testimonial-avatar { background: var(--gradient-mint-sky); }
+        .testimonial-card:nth-child(3) .testimonial-avatar { background: var(--gradient-rose-peach); }
+
+        .testimonial-author-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .testimonial-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .testimonial-role {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        /* ===== FAQ Section ===== */
+        .faq {
+            padding: var(--section-padding);
+            background: var(--bg-section-alt);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hand-drawn decorative element */
+        .faq-deco {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .faq-deco-1 {
+            top: 60px;
+            right: 5%;
+            opacity: 0.15;
+            animation: wiggle 10s ease-in-out infinite;
+        }
+
+        .faq-deco-2 {
+            bottom: 80px;
+            left: 3%;
+            opacity: 0.12;
+            animation: floatSlow 9s ease-in-out infinite;
+        }
+
+        .faq-list {
+            max-width: 720px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(45, 43, 61, 0.06);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-card);
+        }
+
+        .faq-item:hover {
+            border-color: rgba(196, 181, 253, 0.3);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 28px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            transition: color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            color: var(--lavender);
+        }
+
+        .faq-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(196, 181, 253, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .faq-icon svg {
+            width: 16px;
+            height: 16px;
+            color: var(--lavender);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            background: var(--lavender);
+        }
+
+        .faq-item.active .faq-icon svg {
+            color: white;
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer-content {
+            padding: 0 28px 22px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* ===== Bottom CTA Section ===== */
+        .bottom-cta {
+            padding: 140px 0;
+            background: var(--bg-primary);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bottom-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(255,176,136,0.08) 0%, rgba(196,181,253,0.06) 40%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .bottom-cta .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-title {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 18px;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 44px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        .cta-trust {
+            margin-top: 36px;
+            display: flex;
+            justify-content: center;
+            gap: 36px;
+            flex-wrap: wrap;
+        }
+
+        .cta-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+
+        .cta-trust-item svg {
+            width: 16px;
+            height: 16px;
+            color: var(--mint);
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            background: var(--bg-section-alt);
+            padding: 60px 0 40px;
+            border-top: 1px solid rgba(45, 43, 61, 0.06);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand-area {
+            max-width: 300px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            text-decoration: none;
+        }
+
+        .footer-brand svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .footer-tagline {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            line-height: 1.7;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(45, 43, 61, 0.04);
+            border: 1px solid rgba(45, 43, 61, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--gradient-peach-lavender);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-3px);
+        }
+
+        .footer-social a svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 28px;
+            border-top: 1px solid rgba(45, 43, 61, 0.06);
+        }
+
+        .footer-copyright {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 52px;
+            }
+
+            .zigzag-section {
+                gap: 48px;
+            }
+
+            .zigzag-title {
+                font-size: 32px;
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-title {
+                font-size: 38px;
+            }
+        }
+
+        /* ============================================
+           Hamburger Menu Toggle
+           ============================================ */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .nav-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .nav.menu-open .nav-toggle span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .nav.menu-open .nav-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+        .nav.menu-open .nav-toggle span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --section-padding: 80px 0;
+            }
+
+            .nav-toggle { display: flex; color: inherit; }
+            .nav > .container, .nav > div { flex-wrap: wrap; }
+            .nav-links {
+                display: none;
+                order: 99;
+                flex-basis: 100%;
+                flex-direction: column;
+                padding: 12px 0 4px;
+                gap: 0;
+            }
+            .nav-links a {
+                display: block;
+                padding: 12px 0;
+                font-size: 15px;
+                border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+            }
+            .nav-links li { list-style: none; }
+            .nav-links li:last-child a { border-bottom: none; }
+            .nav.menu-open .nav-links { display: flex; }
+
+            .hero-title {
+                font-size: 38px;
+                letter-spacing: -1px;
+            }
+
+            .hero-subtitle {
+                font-size: 17px;
+            }
+
+            .hero-cta-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+
+            .hero-illustration {
+                max-width: 90%;
+            }
+
+            .zigzag-section {
+                grid-template-columns: 1fr;
+                gap: 36px;
+                margin-bottom: 72px;
+            }
+
+            .zigzag-section.reverse .zigzag-content {
+                order: 1;
+            }
+
+            .zigzag-section.reverse .zigzag-image {
+                order: 2;
+            }
+
+            .zigzag-title {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .features-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+                margin: 0 auto;
+            }
+
+            .cta-title {
+                font-size: 34px;
+            }
+
+            .bottom-cta {
+                padding: 100px 0;
+            }
+
+            .cta-trust {
+                flex-direction: column;
+                gap: 12px;
+                align-items: center;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 32px;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-brand-area {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 30px;
+            }
+
+            .zigzag-title {
+                font-size: 24px;
+            }
+
+            .cta-title {
+                font-size: 28px;
+            }
+        }
+        /* ============================================
+           Scroll Reveal
+           ============================================ */
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children > * {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal-children.active > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children.active > *:nth-child(1) { transition-delay: 0.05s; }
+        .js .reveal-children.active > *:nth-child(2) { transition-delay: 0.1s; }
+        .js .reveal-children.active > *:nth-child(3) { transition-delay: 0.15s; }
+        .js .reveal-children.active > *:nth-child(4) { transition-delay: 0.2s; }
+        .js .reveal-children.active > *:nth-child(5) { transition-delay: 0.25s; }
+        .js .reveal-children.active > *:nth-child(6) { transition-delay: 0.3s; }
+
+        /* ============================================
+           Image Placeholder
+           ============================================ */
+        .zigzag-image img, .hero-illustration img {
+            background: linear-gradient(135deg, rgba(255, 176, 136, 0.06), rgba(196, 181, 253, 0.06));
+        }
+    </style>
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+    <!-- ===== Navigation ===== -->
+    <nav class="nav">
+        <div class="container">
+            <a href="#" class="nav-brand">
+                <!-- Hand-drawn pencil/flow icon -->
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="14" fill="url(#brandGrad)" opacity="0.15"/>
+                    <path d="M10 22C12 18 14 16 18 14C20 13 22 12 24 10" stroke="url(#brandGrad)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    <circle cx="10" cy="22" r="2.5" fill="#FFB088"/>
+                    <circle cx="24" cy="10" r="2" fill="#C4B5FD"/>
+                    <defs>
+                        <linearGradient id="brandGrad" x1="0" y1="0" x2="32" y2="32">
+                            <stop stop-color="#FFB088"/>
+                            <stop offset="1" stop-color="#C4B5FD"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                MindFlow
+            </a>
+            <button class="nav-toggle" aria-label="菜单" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links">
+                <li><a href="#features">功能</a></li>
+                <li><a href="#testimonials">评价</a></li>
+                <li><a href="#faq">常见问题</a></li>
+                <li><a href="#cta" class="nav-cta">免费试用</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== Hero Section ===== -->
+    <section class="hero">
+        <!-- Decorative blobs -->
+        <div class="hero-deco-circle-1"></div>
+        <div class="hero-deco-circle-2"></div>
+        <div class="hero-deco-circle-3"></div>
+
+        <!-- Hand-drawn squiggles -->
+        <div class="hero-squiggle hero-squiggle-1">
+            <svg width="80" height="40" viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 20C10 8 20 32 30 20C40 8 50 32 60 20C70 8 78 20 78 20" stroke="#FFB088" stroke-width="2.5" stroke-linecap="round" opacity="0.4"/>
+            </svg>
+        </div>
+        <div class="hero-squiggle hero-squiggle-2">
+            <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M30 2L35 12L46 8L40 18L52 20L40 24L46 34L35 30L30 42L25 30L14 34L20 24L8 20L20 18L14 8L25 12Z" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.35" fill="none"/>
+            </svg>
+        </div>
+
+        <div class="container">
+            <span class="hero-tagline">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"/>
+                </svg>
+                记录灵感，让创意自由生长
+            </span>
+
+            <h1 class="hero-title">让灵感<br>像水一样流淌</h1>
+
+            <p class="hero-subtitle">
+                MindFlow 是你的数字灵感花园。随时捕捉闪念、梳理思绪、连接想法，
+                让每一个灵感都能生根发芽。
+            </p>
+
+            <div class="hero-cta-group">
+                <a href="#cta" class="btn-primary">
+                    开始免费体验
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#features" class="btn-secondary">
+                    了解更多
+                </a>
+            </div>
+
+            <div class="hero-illustration">
+                <!-- Floating doodle decorations -->
+                <div class="hero-doodle hero-doodle-star">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4L23 16L36 16L26 24L29 36L20 28L11 36L14 24L4 16L17 16Z" fill="#FFD4BC" opacity="0.7"/>
+                    </svg>
+                </div>
+                <div class="hero-doodle hero-doodle-heart">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 30S4 22 4 13C4 8 8 4 13 6C15 7 17 9 18 11C19 9 21 7 23 6C28 4 32 8 32 13C32 22 18 30 18 30Z" fill="#E0D8FF" opacity="0.6"/>
+                    </svg>
+                </div>
+                <div class="hero-doodle hero-doodle-sparkle">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="14" cy="14" r="6" fill="#BBF7D0" opacity="0.6"/>
+                        <circle cx="14" cy="14" r="3" fill="#86EFAC" opacity="0.8"/>
+                    </svg>
+                </div>
+                <img src="" alt="MindFlow 灵感记录插画" data-slot="hero" data-size="800x600">
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Zig-Zag Value Props ===== -->
+    <section class="zigzag">
+        <div class="container">
+            <!-- Section 1: Text Left, Image Right -->
+            <div class="zigzag-section">
+                <div class="zigzag-content reveal">
+                    <span class="zigzag-label peach">随时捕捉</span>
+                    <h2 class="zigzag-title">闪念即逝？<br>一键留住灵感火花</h2>
+                    <p class="zigzag-description">
+                        无论是凌晨三点的突发奇想，还是通勤路上的偶然联想，MindFlow 让你在任何时刻、任何设备上，
+                        用最自然的方式记录每一个灵感碎片。
+                    </p>
+                    <ul class="zigzag-features">
+                        <li>
+                            <svg class="check-peach" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            语音、文字、涂鸦多种记录方式
+                        </li>
+                        <li>
+                            <svg class="check-peach" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            离线可用，网络恢复自动同步
+                        </li>
+                        <li>
+                            <svg class="check-peach" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            智能标签，自动分类整理
+                        </li>
+                    </ul>
+                </div>
+                <div class="zigzag-image">
+                    <img src="" alt="随时捕捉灵感插画" data-slot="section" data-size="400x300">
+                </div>
+            </div>
+
+            <!-- Section 2: Image Left, Text Right -->
+            <div class="zigzag-section reverse">
+                <div class="zigzag-content reveal">
+                    <span class="zigzag-label lavender">智能连接</span>
+                    <h2 class="zigzag-title">散落的碎片，<br>编织成思维之网</h2>
+                    <p class="zigzag-description">
+                        MindFlow 的智能关联引擎会自动发现你笔记之间的隐藏联系，
+                        用可视化的思维导图呈现你的知识网络，帮你看到更大的图景。
+                    </p>
+                    <ul class="zigzag-features">
+                        <li>
+                            <svg class="check-lavender" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            AI 自动发现关联笔记
+                        </li>
+                        <li>
+                            <svg class="check-lavender" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            交互式知识图谱可视化
+                        </li>
+                        <li>
+                            <svg class="check-lavender" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            双向链接，任意穿梭跳转
+                        </li>
+                    </ul>
+                </div>
+                <div class="zigzag-image">
+                    <img src="" alt="智能连接思维插画" data-slot="section" data-size="400x300">
+                </div>
+            </div>
+
+            <!-- Section 3: Text Left, Image Right -->
+            <div class="zigzag-section">
+                <div class="zigzag-content reveal">
+                    <span class="zigzag-label mint">绽放分享</span>
+                    <h2 class="zigzag-title">灵感花园，<br>与世界温柔共享</h2>
+                    <p class="zigzag-description">
+                        将你精心培育的想法变成美丽的分享卡片、博客文章或演示文稿。
+                        一键发布，让你的创意触达每一个需要灵感的人。
+                    </p>
+                    <ul class="zigzag-features">
+                        <li>
+                            <svg class="check-mint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            一键生成精美分享卡片
+                        </li>
+                        <li>
+                            <svg class="check-mint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            支持导出为多种格式
+                        </li>
+                        <li>
+                            <svg class="check-mint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            协作空间，与好友共创
+                        </li>
+                    </ul>
+                </div>
+                <div class="zigzag-image">
+                    <img src="" alt="分享创意插画" data-slot="section" data-size="400x300">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Feature Grid Section ===== -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-eyebrow">如何工作</p>
+                <h2 class="section-title">简单三步，开启心流</h2>
+                <p class="section-subtitle">
+                    我们相信好工具应该隐于无形，让你专注于真正重要的事——创造
+                </p>
+            </div>
+            <div class="features-grid reveal-children">
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">自由书写</h3>
+                    <p class="feature-description">
+                        像写日记一样自然地记录，无需刻意整理，让思绪自由流淌。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="18" cy="5" r="3"/>
+                            <circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">智能关联</h3>
+                    <p class="feature-description">
+                        AI 自动发现笔记之间的隐藏联系，构建你的个人知识图谱。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">模板花园</h3>
+                    <p class="feature-description">
+                        精选数十种灵感模板，晨间日记、读书笔记、项目复盘，随取随用。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">AI 对话</h3>
+                    <p class="feature-description">
+                        与 AI 进行苏格拉底式对话，深入追问每一个想法，挖掘更深层次的洞察。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">隐私至上</h3>
+                    <p class="feature-description">
+                        端到端加密保护你最私密的想法，你的灵感只属于你自己。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">全平台同步</h3>
+                    <p class="feature-description">
+                        手机、平板、电脑无缝切换，你的灵感花园随身携带，触手可及。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Testimonials Section ===== -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-eyebrow">用户心声</p>
+                <h2 class="section-title">他们在 MindFlow 中找到了心流</h2>
+                <p class="section-subtitle">
+                    来自不同领域的创作者，都在这里发现了灵感的新可能
+                </p>
+            </div>
+            <div class="testimonials-grid reveal-children">
+                <div class="testimonial-card">
+                    <span class="testimonial-quote-mark">"</span>
+                    <p class="testimonial-text">
+                        MindFlow 改变了我的写作方式。以前灵感总是来了又走，现在我可以随时随地捕捉，
+                        还能看到不同想法之间的神奇连接。它就像一个会思考的笔记本。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">苏</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">苏小暖</span>
+                            <span class="testimonial-role">自由撰稿人 · 公众号「晚安灵感」主理人</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <span class="testimonial-quote-mark">"</span>
+                    <p class="testimonial-text">
+                        作为产品经理，我每天都在收集用户反馈和竞品分析。MindFlow 的知识图谱功能让我轻松
+                        把碎片信息串联成完整的产品洞察，团队复盘时效率翻倍。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">陆</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">陆一川</span>
+                            <span class="testimonial-role">ProductHive · 高级产品经理</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <span class="testimonial-quote-mark">"</span>
+                    <p class="testimonial-text">
+                        我把 MindFlow 推荐给了整个设计团队。手绘涂鸦功能太棒了，设计灵感不再只是脑海中的模糊画面，
+                        而是可以随手画下来、连接起来的具象创意。
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">叶</div>
+                        <div class="testimonial-author-info">
+                            <span class="testimonial-name">叶青瓷</span>
+                            <span class="testimonial-role">DesignLab · UX 设计主管</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FAQ Section ===== -->
+    <section class="faq" id="faq">
+        <!-- Hand-drawn decorative elements -->
+        <div class="faq-deco faq-deco-1">
+            <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="40" stroke="#C4B5FD" stroke-width="2" stroke-dasharray="8 6" opacity="0.4"/>
+                <circle cx="50" cy="50" r="20" stroke="#FFB088" stroke-width="2" stroke-dasharray="4 4" opacity="0.3"/>
+                <circle cx="50" cy="50" r="4" fill="#C4B5FD" opacity="0.5"/>
+            </svg>
+        </div>
+        <div class="faq-deco faq-deco-2">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 10L30 30L10 30Z" stroke="#86EFAC" stroke-width="2" opacity="0.3" fill="none"/>
+                <path d="M50 20L60 40L40 40Z" stroke="#FFB088" stroke-width="2" opacity="0.25" fill="none"/>
+                <circle cx="65" cy="60" r="8" stroke="#C4B5FD" stroke-width="2" opacity="0.3" fill="none"/>
+            </svg>
+        </div>
+
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-eyebrow">常见问题</p>
+                <h2 class="section-title">你可能想知道的</h2>
+                <p class="section-subtitle">
+                    如果没有找到你的问题，欢迎随时联系我们
+                </p>
+            </div>
+            <div class="faq-list reveal">
+                <div class="faq-item active">
+                    <button class="faq-question">
+                        MindFlow 是免费的吗？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            是的！MindFlow 提供慷慨的免费方案，包含无限笔记、基础 AI 关联和全平台同步。
+                            对于需要高级功能（如知识图谱、团队协作、高级 AI 对话）的用户，我们提供 Pro 方案，
+                            每月仅需 ¥29。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        我的数据安全吗？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            绝对安全。我们使用端到端加密技术，你的笔记在设备上加密后才会上传。即使是我们的工程师
+                            也无法读取你的内容。同时我们支持本地存储模式，你可以选择完全离线使用。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        支持哪些平台？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            MindFlow 目前支持 iOS、Android、macOS、Windows 和 Web 版本。
+                            所有平台之间实时同步，你可以在任何设备上无缝切换继续创作。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        可以导入其他笔记应用的数据吗？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            当然可以！我们支持从 Notion、Obsidian、Bear、Apple Notes 等主流笔记应用一键导入。
+                            导入过程中会自动保留你的标签和文件夹结构，无缝迁移毫无压力。
+                        </p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        AI 功能会使用我的笔记来训练模型吗？
+                        <span class="faq-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="faq-answer-content">
+                            绝不会。我们郑重承诺：你的笔记内容永远不会被用于训练任何 AI 模型。
+                            AI 关联和对话功能完全基于你个人的笔记库运行，你的隐私是我们的底线。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Bottom CTA Section ===== -->
+    <section class="bottom-cta" id="cta">
+        <div class="container reveal">
+            <h2 class="cta-title">准备好培育你的<br>灵感花园了吗？</h2>
+            <p class="cta-subtitle">
+                加入 30,000+ 创作者，在 MindFlow 中找到属于自己的心流时刻
+            </p>
+            <a href="#" class="btn-primary" style="padding: 18px 48px; font-size: 17px;">
+                免费开始使用
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            <div class="cta-trust">
+                <div class="cta-trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    永久免费方案
+                </div>
+                <div class="cta-trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    无需绑定信用卡
+                </div>
+                <div class="cta-trust-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    随时可导出数据
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand-area">
+                    <a href="#" class="footer-brand">
+                        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="16" cy="16" r="14" fill="url(#footerGrad)" opacity="0.15"/>
+                            <path d="M10 22C12 18 14 16 18 14C20 13 22 12 24 10" stroke="url(#footerGrad)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                            <circle cx="10" cy="22" r="2.5" fill="#FFB088"/>
+                            <circle cx="24" cy="10" r="2" fill="#C4B5FD"/>
+                            <defs>
+                                <linearGradient id="footerGrad" x1="0" y1="0" x2="32" y2="32">
+                                    <stop stop-color="#FFB088"/>
+                                    <stop offset="1" stop-color="#C4B5FD"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        MindFlow
+                    </a>
+                    <p class="footer-tagline">让灵感自由流淌，让创意生根发芽。<br>你的数字灵感花园，随身携带。</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="GitHub">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="微信">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2026 MindFlow. 用心流连接每一个灵感瞬间。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== FAQ Toggle Script ===== -->
+    <script>
+        // Hamburger 菜单切换
+        const navToggle = document.querySelector('.navbar-toggle, .nav-toggle');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navToggle.closest('nav').classList.toggle('menu-open');
+                navToggle.setAttribute('aria-expanded',
+                    navToggle.closest('nav').classList.contains('menu-open'));
+            });
+            navToggle.closest('nav').querySelectorAll('.navbar-links a, .nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.closest('nav').classList.remove('menu-open');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        // FAQ 折叠交互
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        });
+
+        // Scroll Reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+        document.querySelectorAll('.reveal, .reveal-children').forEach(el => {
+            revealObserver.observe(el);
+        });
+    </script>
+</body>
+</html>

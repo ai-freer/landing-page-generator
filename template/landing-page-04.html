@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MasterClass Pro | 大师级在线课程平台</title>
+    <style>
+        /* ===== CSS Reset & Base Styles ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary Colors - Navy Blue Theme */
+            --primary-navy: #1e3a5f;
+            --primary-navy-dark: #152a47;
+            --primary-navy-light: #2c5282;
+            
+            /* Accent Color - Gold */
+            --accent-gold: #d4af37;
+            --accent-gold-light: #e8c547;
+            --accent-gold-dark: #b8972e;
+            
+            /* Background Colors */
+            --hero-gradient-start: #1e3a5f;
+            --hero-gradient-end: #152a47;
+            --light-bg: #f8fafc;
+            --white: #ffffff;
+            --cta-bg: #1e3a5f;
+            --footer-bg: #0f1f33;
+            
+            /* Text Colors */
+            --text-dark: #1a1a1a;
+            --text-medium: #4a5568;
+            --text-light: #a0aec0;
+            --text-white: #ffffff;
+            
+            /* Shadows */
+            --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-button: 0 4px 14px rgba(212, 175, 55, 0.4);
+            
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            
+            /* Spacing */
+            --section-padding: 100px 0;
+            --container-max-width: 1200px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== Container ===== */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ============================================
+           Navbar
+           ============================================ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 1px 20px rgba(0, 0, 0, 0.08);
+            padding: 14px 0;
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-brand {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-white);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand span { color: var(--accent-gold); }
+
+        .navbar.scrolled .navbar-brand {
+            color: var(--primary-navy);
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .navbar-links a {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-links a:hover { color: var(--accent-gold); }
+        .navbar.scrolled .navbar-links a { color: var(--text-medium); }
+        .navbar.scrolled .navbar-links a:hover { color: var(--primary-navy); }
+
+        .navbar-cta {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-navy-dark) !important;
+            text-decoration: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3);
+        }
+
+        .navbar-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* ===== Hero Section ===== */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--hero-gradient-start) 0%, var(--hero-gradient-end) 100%);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 60%;
+            height: 120%;
+            background: radial-gradient(ellipse, rgba(212, 175, 55, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+        }
+
+        .hero .container {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--accent-gold);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 28px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hero-badge::before {
+            content: '★';
+            font-size: 12px;
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            color: var(--text-white);
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .hero-title span {
+            color: var(--accent-gold);
+        }
+
+        .hero-subtitle {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-gold {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-navy-dark);
+            padding: 18px 36px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-button);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-gold svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-gold:hover svg {
+            transform: translateX(4px);
+        }
+
+        .btn-outline-white {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            color: var(--text-white);
+            padding: 17px 35px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-white:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-outline-white svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ===== Stats Section ===== */
+        .stats {
+            padding: 80px 0;
+            background: var(--white);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--primary-navy);
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .stat-value span {
+            color: var(--accent-gold);
+        }
+
+        .stat-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-medium);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ===== Features Section ===== */
+        .features {
+            padding: var(--section-padding);
+            background: var(--light-bg);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 32px 28px;
+            position: relative;
+            border-left: 4px solid var(--accent-gold);
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-navy), var(--primary-navy-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-icon svg {
+            width: 28px;
+            height: 28px;
+            color: var(--text-white);
+            stroke-width: 1.8;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .feature-description {
+            font-size: 16px;
+            color: var(--text-medium);
+            line-height: 1.7;
+        }
+
+        /* ===== Content Sections (Alternating Layout) ===== */
+        .content-section {
+            padding: var(--section-padding);
+            background: var(--white);
+        }
+
+        .content-section:nth-child(even) {
+            background: var(--light-bg);
+        }
+
+        .content-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .content-row.reverse {
+            direction: rtl;
+        }
+
+        .content-row.reverse > * {
+            direction: ltr;
+        }
+
+        .content-text {
+            padding: 20px 0;
+        }
+
+        .content-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(30, 58, 95, 0.08);
+            color: var(--primary-navy);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-title {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .content-description {
+            font-size: 17px;
+            color: var(--text-medium);
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+
+        .content-list {
+            list-style: none;
+        }
+
+        .content-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+            font-size: 16px;
+            color: var(--text-medium);
+        }
+
+        .content-list li::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content-list li svg {
+            width: 14px;
+            height: 14px;
+            color: var(--primary-navy-dark);
+            margin-left: -19px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content-media {
+            position: relative;
+        }
+
+        .content-media-wrapper {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(30, 58, 95, 0.15);
+        }
+
+        .content-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+
+        .media-placeholder {
+            width: 100%;
+            aspect-ratio: 16/10;
+            background: linear-gradient(135deg, var(--primary-navy-light), var(--primary-navy));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .media-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(255, 255, 255, 0.02) 10px,
+                    rgba(255, 255, 255, 0.02) 20px
+                );
+        }
+
+        .media-placeholder-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .media-placeholder-icon svg {
+            width: 36px;
+            height: 36px;
+            color: var(--accent-gold);
+        }
+
+        /* ===== Video Section ===== */
+        .video-section {
+            padding: var(--section-padding);
+            background: var(--light-bg);
+        }
+
+        .video-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(30, 58, 95, 0.2);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
+
+        .video-thumbnail-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .video-thumbnail-container:hover .video-overlay {
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-navy), var(--primary-navy-dark));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-placeholder:hover {
+            background: linear-gradient(135deg, var(--primary-navy-light), var(--primary-navy));
+        }
+
+        .video-play-btn {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
+        }
+
+        .video-placeholder:hover .video-play-btn {
+            transform: scale(1.1);
+            box-shadow: 0 15px 50px rgba(212, 175, 55, 0.5);
+        }
+
+        .video-play-btn svg {
+            width: 40px;
+            height: 40px;
+            color: var(--primary-navy-dark);
+            margin-left: 4px;
+        }
+
+        .video-placeholder-text {
+            color: var(--text-white);
+            font-size: 18px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        /* ===== CTA Section ===== */
+        .cta {
+            padding: 120px 0;
+            background: linear-gradient(135deg, var(--primary-navy) 0%, var(--primary-navy-dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 80%;
+            height: 150%;
+            background: radial-gradient(ellipse, rgba(212, 175, 55, 0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .cta::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -20%;
+            width: 60%;
+            height: 100%;
+            background: radial-gradient(ellipse, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .cta .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .cta-title span {
+            color: var(--accent-gold);
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-navy-dark);
+            padding: 20px 48px;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.5);
+        }
+
+        .cta-btn svg {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-btn:hover svg {
+            transform: translateX(4px);
+        }
+
+        .cta-features {
+            margin-top: 48px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .cta-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 15px;
+        }
+
+        .cta-feature-item svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent-gold);
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            background: var(--footer-bg);
+            padding: 48px 0;
+        }
+
+        .footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-white);
+            letter-spacing: -0.5px;
+        }
+
+        .footer-logo span {
+            color: var(--accent-gold);
+        }
+
+        .footer-copyright {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 52px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 32px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-row {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .content-row.reverse {
+                direction: ltr;
+            }
+
+            .content-text {
+                order: 1;
+            }
+
+            .content-media {
+                order: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 40px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .hero-cta-group {
+                flex-direction: column;
+            }
+
+            .btn-gold, .btn-outline-white {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .stat-value {
+                font-size: 44px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                max-width: 480px;
+                margin: 0 auto;
+            }
+
+            .content-title {
+                font-size: 32px;
+            }
+
+            .cta-title {
+                font-size: 32px;
+            }
+
+            .cta-features {
+                flex-direction: column;
+                gap: 16px;
+                align-items: center;
+            }
+
+            .footer .container {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-value {
+                font-size: 48px;
+            }
+
+            .video-play-btn {
+                width: 80px;
+                height: 80px;
+            }
+
+            .video-play-btn svg {
+                width: 32px;
+                height: 32px;
+            }
+        }
+        /* ============================================
+           Scroll Reveal
+           ============================================ */
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children > * {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .js .reveal-children.active > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .js .reveal-children.active > *:nth-child(1) { transition-delay: 0.05s; }
+        .js .reveal-children.active > *:nth-child(2) { transition-delay: 0.1s; }
+        .js .reveal-children.active > *:nth-child(3) { transition-delay: 0.15s; }
+        .js .reveal-children.active > *:nth-child(4) { transition-delay: 0.2s; }
+        .js .reveal-children.active > *:nth-child(5) { transition-delay: 0.25s; }
+        .js .reveal-children.active > *:nth-child(6) { transition-delay: 0.3s; }
+
+        /* ============================================
+           Hero Gold Particles
+           ============================================ */
+        .hero-particle {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .hero-particle-1 {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.4);
+            top: 20%;
+            left: 15%;
+            animation: particle-float 12s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .hero-particle-2 {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.3);
+            top: 60%;
+            right: 20%;
+            animation: particle-float 15s ease-in-out infinite 3s;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .hero-particle-3 {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.25);
+            bottom: 25%;
+            left: 25%;
+            animation: particle-float 18s ease-in-out infinite 6s;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
+        }
+
+        .hero-particle-4 {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.5);
+            top: 35%;
+            right: 10%;
+            animation: particle-float 10s ease-in-out infinite 2s;
+        }
+
+        @keyframes particle-float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            25% { transform: translate(20px, -30px) scale(1.2); opacity: 1; }
+            50% { transform: translate(-15px, 25px) scale(0.8); opacity: 0.4; }
+            75% { transform: translate(25px, 15px) scale(1.1); opacity: 0.8; }
+        }
+
+        /* ============================================
+           Image Placeholder
+           ============================================ */
+        .content-image, .video-thumbnail {
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.06), rgba(44, 82, 130, 0.06));
+        }
+
+        /* ============================================
+           Hamburger Menu Toggle
+           ============================================ */
+        .navbar-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .navbar-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+        .navbar.menu-open .navbar-toggle span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 14px 0;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                box-shadow: 0 1px 20px rgba(0, 0, 0, 0.08);
+            }
+            .navbar-brand { color: var(--primary-navy) !important; }
+            .navbar-toggle { display: flex; color: var(--text-medium); }
+            .navbar > .container, .navbar > div { flex-wrap: wrap; }
+            .navbar-links {
+                display: none;
+                order: 99;
+                flex-basis: 100%;
+                flex-direction: column;
+                padding: 12px 0 4px;
+                gap: 0;
+            }
+            .navbar-links a {
+                display: block;
+                padding: 12px 0;
+                font-size: 15px;
+                color: var(--text-medium) !important;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            }
+            .navbar-links li { list-style: none; }
+            .navbar-links li:last-child a { border-bottom: none; }
+            .navbar.menu-open .navbar-links { display: flex; }
+            .navbar-cta { margin-top: 8px; display: block; text-align: center; border-radius: 50px; font-size: 13px; padding: 8px 20px; }
+            .hero-particle { display: none; }
+        }
+    </style>
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="navbar-brand">Master<span>Class</span></a>
+            <button class="navbar-toggle" aria-label="菜单" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="navbar-links">
+                <li><a href="#features">课程特色</a></li>
+                <li><a href="#video">视频介绍</a></li>
+                <li><a href="#cta">注册</a></li>
+                <li><a href="#cta" class="navbar-cta">免费试学</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== Hero Section ===== -->
+    <section class="hero">
+        <div class="hero-particle hero-particle-1"></div>
+        <div class="hero-particle hero-particle-2"></div>
+        <div class="hero-particle hero-particle-3"></div>
+        <div class="hero-particle hero-particle-4"></div>
+        <div class="container">
+            <span class="hero-badge">大师级课程</span>
+            <h1 class="hero-title">
+                向<span>顶尖专家</span>学习<br>
+                开启你的进阶之路
+            </h1>
+            <p class="hero-subtitle">
+                汇聚全球顶级导师，提供系统化、实战型课程内容。
+                从入门到精通，让每一分钟的学习都有价值。
+            </p>
+            <div class="hero-cta-group">
+                <a href="#cta" class="btn-gold">
+                    免费试学
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#video" class="btn-outline-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polygon points="10 8 16 12 10 16 10 8"/>
+                    </svg>
+                    观看介绍
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Stats Section ===== -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid reveal-children">
+                <div class="stat-item">
+                    <div class="stat-value">500<span>+</span></div>
+                    <div class="stat-label">精品课程</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">100<span>万</span></div>
+                    <div class="stat-label">学员认证</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">98<span>%</span></div>
+                    <div class="stat-label">好评率</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">50<span>+</span></div>
+                    <div class="stat-label">行业领域</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Features Section ===== -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">为什么选择我们</h2>
+                <p class="section-subtitle">
+                    我们专注于提供高质量的学习体验，帮助你更快地掌握新技能
+                </p>
+            </div>
+            <div class="features-grid reveal-children">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">顶级导师团队</h3>
+                    <p class="feature-description">
+                        汇聚各行业顶尖专家，分享多年实战经验和独家方法论，让你少走弯路。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">体系化课程</h3>
+                    <p class="feature-description">
+                        从基础到进阶，循序渐进的学习路径，配套实战项目和作业，学以致用。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">随时随地学习</h3>
+                    <p class="feature-description">
+                        支持多端同步，手机、平板、电脑无缝切换，充分利用碎片化时间。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Content Section 1 ===== -->
+    <section class="content-section">
+        <div class="container">
+            <div class="content-row">
+                <div class="content-text reveal">
+                    <span class="content-badge">课程特色</span>
+                    <h2 class="content-title">视频教学 + 实战演练</h2>
+                    <p class="content-description">
+                        每门课程都包含高清视频讲解和配套实战项目。
+                        导师手把手带你完成真实案例，边学边练，快速掌握核心技能。
+                    </p>
+                    <ul class="content-list">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            高清视频，可离线下载
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            实战项目，巩固所学
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            课后作业，及时反馈
+                        </li>
+                    </ul>
+                </div>
+                <div class="content-media">
+                    <div class="content-media-wrapper">
+                        <img src="" alt="视频学习界面" class="content-image" data-slot="content" data-size="600x400">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Content Section 2 ===== -->
+    <section class="content-section">
+        <div class="container">
+            <div class="content-row reverse">
+                <div class="content-text reveal">
+                    <span class="content-badge">学习社区</span>
+                    <h2 class="content-title">与志同道合者一起成长</h2>
+                    <p class="content-description">
+                        加入活跃的学习社区，与同学交流心得、分享经验。
+                        还有专业助教答疑解惑，让学习不再孤单。
+                    </p>
+                    <ul class="content-list">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            专属学习群组
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            助教一对一答疑
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            定期直播互动
+                        </li>
+                    </ul>
+                </div>
+                <div class="content-media">
+                    <div class="content-media-wrapper">
+                        <img src="" alt="学习社区" class="content-image" data-slot="content" data-size="600x400">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Content Section 3 ===== -->
+    <section class="content-section">
+        <div class="container">
+            <div class="content-row">
+                <div class="content-text reveal">
+                    <span class="content-badge">学习认证</span>
+                    <h2 class="content-title">完成课程获得权威认证</h2>
+                    <p class="content-description">
+                        通过课程考核后，获得行业认可的结业证书。
+                        为你的简历增添亮点，助力职业发展。
+                    </p>
+                    <ul class="content-list">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            电子证书，永久有效
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            可在线验证真伪
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            LinkedIn 一键分享
+                        </li>
+                    </ul>
+                </div>
+                <div class="content-media">
+                    <div class="content-media-wrapper">
+                        <img src="" alt="学习认证证书" class="content-image" data-slot="content" data-size="600x400">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Video Section ===== -->
+    <section class="video-section" id="video">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2 class="section-title">看看我们的课程</h2>
+                <p class="section-subtitle">
+                    观看介绍视频，了解平台特色和课程内容
+                </p>
+            </div>
+            <div class="video-container reveal">
+                <div class="video-wrapper">
+                    <!-- YouTube/Vimeo 嵌入占位符 -->
+                    <!-- <iframe src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe> -->
+                    <div class="video-thumbnail-container">
+                        <img src="" alt="课程介绍视频" class="video-thumbnail" data-slot="video-thumbnail" data-size="600x340">
+                        <div class="video-overlay">
+                            <div class="video-play-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
+                            </div>
+                            <span class="video-placeholder-text">点击播放介绍视频</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA Section ===== -->
+    <section class="cta" id="cta">
+        <div class="container reveal">
+            <h2 class="cta-title">准备好开始学习了吗？</h2>
+            <p class="cta-subtitle">
+                加入超过 100 万学员的学习行列，今天就开启你的进阶之路
+            </p>
+            <a href="#" class="cta-btn">
+                立即免费注册
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            <div class="cta-features">
+                <div class="cta-feature-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    7天免费试学
+                </div>
+                <div class="cta-feature-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    无需绑定信用卡
+                </div>
+                <div class="cta-feature-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    随时可取消订阅
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-brand">
+                <div class="footer-logo">Master<span>Class</span></div>
+            </div>
+            <p class="footer-copyright">© 2026 MasterClass Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger 菜单切换
+        const navToggle = document.querySelector('.navbar-toggle, .nav-toggle');
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navToggle.closest('nav').classList.toggle('menu-open');
+                navToggle.setAttribute('aria-expanded',
+                    navToggle.closest('nav').classList.contains('menu-open'));
+            });
+            navToggle.closest('nav').querySelectorAll('.navbar-links a, .nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.closest('nav').classList.remove('menu-open');
+                    navToggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        // Navbar 滚动效果
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.pageYOffset > 60);
+        });
+
+        // Scroll Reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+        document.querySelectorAll('.reveal, .reveal-children').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // 数字计数器动画
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const span = el.querySelector('span');
+                    const suffix = span ? span.outerHTML : '';
+                    const num = parseInt(el.textContent);
+                    if (isNaN(num)) return;
+
+                    const duration = 2000;
+                    const start = performance.now();
+
+                    function update(now) {
+                        const elapsed = now - start;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        el.innerHTML = Math.floor(eased * num) + suffix;
+                        if (progress < 1) requestAnimationFrame(update);
+                    }
+
+                    requestAnimationFrame(update);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-value').forEach(el => {
+            counterObserver.observe(el);
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#') return;
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>
