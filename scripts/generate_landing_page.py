@@ -58,8 +58,8 @@ LENGTH_RULES = {
 # 各模板的推荐可选字段
 TEMPLATE_OPTIONAL_FIELDS = {
     "template-02": ["product.price", "product.image"],
-    "template-03": ["story"],
-    "template-04": ["content_sections", "video_embed"],
+    "template-03": ["story", "story_images"],
+    "template-04": ["content_sections", "video_embed", "video_thumbnail"],
     "template-05": ["product.info"],
     "template-06": ["zigzag_sections", "faq"],
     "template-07": ["hero.image_url"],
@@ -68,7 +68,7 @@ TEMPLATE_OPTIONAL_FIELDS = {
     "template-10": ["structured_sections"],
     "template-11": ["input_placeholder"],
     "template-13": ["code_snippets"],
-    "template-15": ["gallery_images"],
+    "template-15": ["gallery_images", "editorial_images"],
 }
 
 # 图片 URL 字段映射：config 字段 → data-slot 名称
@@ -76,7 +76,19 @@ IMAGE_SLOT_MAP = {
     "product.image": "hero",
     "hero.image_url": "hero",
     "immersive_section.image_url": "immersive",
+    "story_images[]": "story",
+    "editorial_images[].url": "editorial",
+    "video_thumbnail": "video-thumbnail",
 }
+
+
+def _is_valid_image_path(path: str) -> bool:
+    """检查图片路径是否为合法格式：本地相对路径 assets/... 或外部 URL http(s)://..."""
+    return (
+        path.startswith("assets/")
+        or path.startswith("http://")
+        or path.startswith("https://")
+    )
 
 
 def load_config(config_path: str) -> dict:
@@ -148,10 +160,10 @@ def validate_config(config: dict) -> list:
         if color_val and not hex_pattern.match(color_val):
             warnings.append(f"theme.{color_field} 格式不标准: {color_val}（建议 #RRGGBB）")
 
-    # --- URL 格式校验 ---
+    # --- 图片路径格式校验 ---
     image_url = product.get("image")
-    if image_url and not (image_url.startswith("http://") or image_url.startswith("https://")):
-        warnings.append(f"product.image 不是有效 URL: {image_url}")
+    if image_url and not _is_valid_image_path(image_url):
+        warnings.append(f"product.image 路径格式不合法: {image_url}（应为 assets/xxx.png 或 http(s)://...）")
 
     # --- 模板特定字段建议 ---
     if template_id and template_id in TEMPLATE_OPTIONAL_FIELDS:
@@ -227,6 +239,22 @@ def get_image_urls_from_config(config: dict) -> dict:
         img = img_obj.get("url")
         if img:
             urls.setdefault("gallery", []).append(img)
+
+    # story_images[] → story slot（template-03 故事讲述型）
+    for img in config.get("story_images", []):
+        if img:
+            urls.setdefault("story", []).append(img)
+
+    # editorial_images[].url → editorial slot（template-15 数字工坊/静谧艺廊）
+    for img_obj in config.get("editorial_images", []):
+        img = img_obj.get("url")
+        if img:
+            urls.setdefault("editorial", []).append(img)
+
+    # video_thumbnail → video-thumbnail slot（template-04 双列布局+视频）
+    video_thumb = config.get("video_thumbnail")
+    if video_thumb:
+        urls.setdefault("video-thumbnail", []).append(video_thumb)
 
     return urls
 

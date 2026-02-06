@@ -7,10 +7,45 @@
 **与用户对话时，使用风格名称（如"经典Hero+Features"、"便当盒式"等）推荐和描述风格。template_id仅作为内部标识符传递给脚本，不应向用户暴露模板编号。**
 
 ## 目录
+- [图片路径规范](#图片路径规范)
 - [配置文件结构](#配置文件结构)
 - [字段详细说明](#字段详细说明)
 - [配置示例](#配置示例)
 - [验证规则](#验证规则)
+
+## 图片路径规范
+
+Config 中所有图片相关字段（`product.image`、`hero.image_url`、`*_images[].url`、`image_url` 等）支持两种路径格式：
+
+### 本地相对路径（推荐）
+
+```
+assets/hero.png
+assets/section-1.png
+assets/gallery-3.jpg
+```
+
+- **适用场景**：AI 生成的图片、用户上传后落盘的图片
+- **命名规则**：`assets/{data-slot类型}-{序号}.{ext}`（如 `assets/hero.png`、`assets/step-2.png`）
+- **优势**：交付包自包含，用户下载 `output/` 目录即可离线使用，无外部依赖
+- **要求**：图片文件必须存在于 `output/assets/` 目录中
+
+### 外部 URL（可选）
+
+```
+https://example.com/product-image.jpg
+https://cdn.example.com/hero.png
+```
+
+- **适用场景**：用户直接提供的在线图片链接
+- **注意**：外部 URL 依赖网络，**建议在最终交付前将外部图片下载到 `output/assets/` 并转为本地路径**，确保交付包完整性
+
+### 最终交付标准
+
+| 阶段 | 允许的路径格式 | 说明 |
+|------|--------------|------|
+| 对话过程中 | 本地路径 + 外部 URL 均可 | 用户可随时提供 URL，AI 随时生成本地图片 |
+| 最终交付时 | **仅本地相对路径** | `output/` 目录应完全自包含，所有图片在 `output/assets/` 中 |
 
 ## 配置文件结构
 
@@ -23,7 +58,7 @@
     "name": "string",
     "tagline": "string",
     "description": "string",
-    "image": "string (URL)",
+    "image": "string (图片路径)",
     "price": "string",
     "info": ["string", ...]
   },
@@ -46,7 +81,15 @@
     "mission": "string",
     "why_us": "string"
   },
+  "story_images": ["string (图片路径)", "..."],
   "video_embed": "string",
+  "video_thumbnail": "string (图片路径)",
+  "editorial_images": [
+    {
+      "url": "string (图片路径)",
+      "caption": "string"
+    }
+  ],
   "mock_data": {
     "testimonials": [
       {
@@ -114,10 +157,10 @@
 - 示例："TaskFlow Pro是一款强大的项目管理工具，帮助团队高效协作，提升生产力。"
 
 **product.image（可选）**
-- 类型：string (URL)
-- 来源：用户提供的图片 URL 或 AI 动态生成的图片 URL（参考 [image-generation-guide.md](image-generation-guide.md) 的图片规划流程）
+- 类型：string（图片路径，详见[图片路径规范](#图片路径规范)）
+- 来源：AI 动态生成并落盘到 `output/assets/`，或用户提供的图片 URL
 - 适用模板：所有含产品图展示位的模板（如 template-02, template-03 等）
-- 示例："https://example.com/product-image.jpg"
+- 示例：`"assets/hero.png"`（本地路径，推荐）或 `"https://example.com/product-image.jpg"`（外部 URL）
 
 **product.price（可选）**
 - 类型：string
@@ -173,10 +216,25 @@
 **story.why_us（必需）**
 - 适用模板：template-03
 
+### story_images数组（可选，template-03专用）
+
+- 类型：array of strings（图片路径，详见[图片路径规范](#图片路径规范)）
+- 对应 HTML 中 `data-slot="story"` 的图片槽位
+- 来源：AI 动态生成并落盘，或用户提供的品牌/故事图片
+- 建议：提供2张，分别对应"起源"和"使命"叙事场景
+- 示例：`["assets/story-1.png", "assets/story-2.png"]`
+
 ### video_embed（可选）
 
 - 适用模板：template-04
 - 示例："https://www.youtube.com/embed/VIDEO_ID"
+
+### video_thumbnail（可选，template-04专用）
+
+- 类型：string（图片路径，详见[图片路径规范](#图片路径规范)）
+- 对应 HTML 中 `data-slot="video-thumbnail"` 的图片槽位
+- 来源：视频封面截图或 AI 生成并落盘
+- 示例：`"assets/video-thumbnail.png"`
 
 ### mock_data对象（可选但推荐）
 
@@ -189,8 +247,9 @@
 
 ### zigzag_sections数组（可选，template-06专用）
 
-- 字段：title、description、image_url、image_position（left/right）
+- 字段：title、description、image_url（图片路径，详见[图片路径规范](#图片路径规范)）、image_position（left/right）
 - 建议：提供3个zigzag_sections，依次使用right/left/right
+- image_url 示例：`"assets/section-1.png"`（本地路径，推荐）或 `"https://example.com/image.jpg"`
 
 ### faq数组（可选，template-06专用）
 
@@ -219,28 +278,42 @@
 
 ### gallery_images数组（可选，template-15专用）
 
-- 字段：url、caption
-- 来源：用户提供的作品集图片 URL 或 AI 根据产品调性动态生成
+- 字段：url（图片路径，详见[图片路径规范](#图片路径规范)）、caption
+- 对应 HTML 中 `data-slot="gallery"` 的图片槽位
+- 来源：AI 根据产品调性动态生成并落盘，或用户提供的作品集图片
 - 建议：提供5-10张高质量图片，风格与模板"数字工坊/静谧艺廊"的艺术调性一致
+- url 示例：`"assets/gallery-1.png"`
+
+### editorial_images数组（可选，template-15专用）
+
+- 字段：url（图片路径，详见[图片路径规范](#图片路径规范)）、caption
+- 对应 HTML 中 `data-slot="editorial"` 的图片槽位
+- 来源：AI 动态生成并落盘，或用户提供的编辑级大图
+- 建议：提供2张高质量大幅图片（1200×800 / 1200×600），配合模板的明暗对照法（chiaroscuro）艺术风格
+- url 示例：`"assets/editorial-1.png"`
 
 ### hero对象（可选，template-07/08专用）
 
-- hero.image_url：首屏右侧插图URL（由 AI 根据产品内容动态规划生成，或由用户直接提供）
+- hero.image_url：首屏右侧插图路径（图片路径，详见[图片路径规范](#图片路径规范)）
+- 示例：`"assets/hero.png"`（本地路径，推荐）或 `"https://example.com/hero.jpg"`
 
 ### immersive_section对象（可选，template-08专用）
 
-- 字段：title、description、image_url
+- 字段：title、description、image_url（图片路径，详见[图片路径规范](#图片路径规范)）
+- image_url 示例：`"assets/immersive.png"`
 
 ### connected_sections数组（可选，template-09专用）
 
-- 字段：title、description、image_url
-- image_url 来源：用户提供或 AI 动态生成
+- 字段：title、description、image_url（图片路径，详见[图片路径规范](#图片路径规范)）
+- image_url 来源：AI 动态生成并落盘，或用户提供
+- image_url 示例：`"assets/step-1.png"`
 - 建议：提供3个步骤
 
 ### structured_sections数组（可选，template-10专用）
 
-- 字段：title、description、image_url
-- image_url 来源：用户提供或 AI 动态生成
+- 字段：title、description、image_url（图片路径，详见[图片路径规范](#图片路径规范)）
+- image_url 来源：AI 动态生成并落盘，或用户提供
+- image_url 示例：`"assets/section-1.png"`
 - 建议：提供3个区块
 
 ### theme对象（可选）
@@ -300,7 +373,7 @@
     "name": "智能手表 Pro",
     "tagline": "健康生活，从手腕开始",
     "description": "智能手表Pro集成了健康监测、运动追踪、智能提醒等功能，24小时陪伴您的健康生活。",
-    "image": "https://example.com/smartwatch.jpg",
+    "image": "assets/hero.png",
     "price": "¥1,299"
   },
   "features": [
@@ -325,14 +398,15 @@
     "name": "GreenLife",
     "tagline": "让生活更美好",
     "description": "GreenLife致力于提供环保、可持续的生活用品，帮助人们过上更健康、更环保的生活。",
-    "image": "https://example.com/greenlife.jpg"
+    "image": "assets/hero.png"
   },
   "story": {
     "origin": "GreenLife的故事始于2020年，当时我们的创始人发现日常生活中的很多产品都含有有害化学物质。",
     "journey": "从最初的手工皂，到现在的完整产品线，我们始终坚持使用天然、环保的原料。",
     "mission": "我们的使命是让每个人都能轻松地过上更健康、更环保的生活。",
     "why_us": "选择GreenLife的理由：100%天然原料、零塑料包装、支持可持续发展。"
-  }
+  },
+  "story_images": ["assets/story-1.png", "assets/story-2.png"]
 }
 ```
 
@@ -410,7 +484,7 @@
 ### 字段类型
 - template_id：有效的模板ID（template-01到template-15）
 - features：数组，每个元素包含title和description
-- product.image：URL格式
+- 图片路径字段（product.image、hero.image_url、各 image_url / url 字段）：`assets/xxx.png`（本地路径）或 `https://...`（外部 URL），详见[图片路径规范](#图片路径规范)
 - theme.*：hex颜色格式（#RRGGBB）
 
 ### 长度限制

@@ -8,7 +8,7 @@
 
 ## 中文
 
-AI 驱动的 Landing Page 生成器 —— 一个面向 AI 智能体的 Skill，内置 15 种经过精心打磨的专业模板，覆盖 2025 年三大核心设计趋势。通过对话式交互，从产品描述到可部署的完整网站，一步到位。
+AI 驱动的 Landing Page 生成器 —— 一个面向 AI 智能体的 Skill，深度理解 2025 年三大核心设计趋势，智能匹配最佳风格。通过对话式交互，从产品描述到可部署的完整网站，一步到位。
 
 ### 设计哲学
 
@@ -20,7 +20,7 @@ AI 驱动的 Landing Page 生成器 —— 一个面向 AI 智能体的 Skill，
 | **网格化与模块化** | Bento Grid、卡片式布局、非线性浏览 | 便当盒式、多彩层级版、动态商务风 |
 | **展示即交互** | 实时代码终端、可交互演示、流式动画 | 代码原生型、趣味连接型、双列布局+视频 |
 
-### 15 种模板风格
+### 设计风格总览
 
 #### 物理质感回归派
 
@@ -78,8 +78,8 @@ landing-page-generator/
 │   ├── aesthetic-enhancement-guide.md  # 美学增强实现指南
 │   ├── workflows.md               # 对话流程示例
 │   ├── template-usage.md          # 模板与配置字段映射
-│   └── templates/                 # 15 个模板的详细设计文档
-├── template/                # 15 个 HTML 模板（最佳实践标杆）
+│   └── templates/                 # 各风格的详细设计文档
+├── template/                # HTML 模板（最佳实践标杆）
 │   ├── landing-page-01.html
 │   ├── ...
 │   └── landing-page-15.html

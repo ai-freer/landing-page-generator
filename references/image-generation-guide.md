@@ -72,16 +72,20 @@
 - 图片与周围元素的间距和比例关系 → 决定构图方式
 - 图片的 `loading="lazy"` 和响应式策略 → 技术约束
 
-图片槽位速查：
+图片槽位速查（`data-slot` 值 → 对应 config 字段）：
 
-| 槽位类型 | 典型尺寸 | 出现频率 | 说明 |
-|----------|---------|---------|------|
-| Hero 主图 | 1200×600 / 800×800 | 几乎所有模板 | 首屏核心视觉 |
-| Feature 配图 | 400×300 | 部分模板 | 功能特性区域配图 |
-| Story/Section 图 | 600×400 | 部分模板 | 内容分区配图 |
-| Gallery 图 | 混合尺寸 | template-15 | 画廊/作品集 |
-| Avatar 头像 | 80×80 圆形 | 有评价区的模板 | 用户评价头像 |
-| 视频缩略图 | 600×340 (16:9) | template-04 | 视频封面 |
+| data-slot | 典型尺寸 | 使用模板 | 对应 config 字段 | 说明 |
+|-----------|---------|---------|----------------|------|
+| `hero` | 1200×600 / 800×800 | 01-11, 14 | `product.image` / `hero.image_url` | 首屏核心视觉 |
+| `section` | 400×300 / 600×400 | 06, 07, 10, 14 | `zigzag_sections[].image_url` / `structured_sections[].image_url` | 功能/内容分区配图 |
+| `content` | 600×400 | 04 | `content_sections[].image_url` | 双列内容区配图 |
+| `step` | 400×300 | 09 | `connected_sections[].image_url` | 步骤配图 |
+| `story` | 600×400 | 03 | `story_images[]` | 叙事配图 |
+| `immersive` | 1200×600 | 08 | `immersive_section.image_url` | 沉浸式大图 |
+| `editorial` | 1200×800 / 1200×600 | 15 | `editorial_images[].url` | 编辑大图 |
+| `gallery` | 400×500 | 15 | `gallery_images[].url` | 画廊/作品集 |
+| `video-thumbnail` | 600×340 (16:9) | 04 | `video_thumbnail` | 视频封面 |
+| — | 80×80 圆形 | 有评价区的模板 | — | 用户评价头像（CSS 处理） |
 
 > **注意**：部分模板（便当盒式、电影感/硬件流、代码原生型）以 CSS 视觉效果为主，图片需求较少或可选。
 
@@ -108,7 +112,7 @@
 ```
 
 #### ⑤ 图片获取与落盘
-按规划清单逐一获取图片（详见下方"Prompt 生成规则"）。获取后将图片保存到 `output/assets/` 目录，按命名规则存储（如 `hero.png`、`feature-1.png`、`gallery-3.jpg`）。
+按规划清单逐一获取图片（详见下方"Prompt 生成规则"）。获取后将图片保存到 `output/assets/` 目录，按 `{data-slot类型}-{序号}.{ext}` 命名规则存储（如 `hero.png`、`section-1.png`、`step-2.png`、`gallery-3.jpg`）。
 
 #### ⑥ AI 生成 HTML + 后处理注入
 AI 以模板为标杆创作 HTML，图片使用**相对路径** `assets/xxx.png` 引用。将图片路径写入 config 对应字段，然后由 `generate_landing_page.py` 后处理脚本校验 config、注入图片路径到 `data-slot` 标记位、验证 HTML 结构，输出到 `output/index.html`。最终 `output/` 目录即为用户可下载的完整网站包。

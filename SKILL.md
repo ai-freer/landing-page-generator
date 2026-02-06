@@ -1,6 +1,6 @@
 ---
 name: landing-page-generator
-description: 根据产品描述和参考图智能推荐设计风格并生成Landing Page，根据产品自动解析配置，专为Coze平台设计，支持对话式持续修改、上下文配置管理、文件自动生成，交付可直接部署的完整网站包（HTML + 图片资源）。提供15种专业模板：经典Hero+Features、产品展示+CTA、故事讲述型、双列布局+视频、深色赛博风、极简插画风、多彩层级版、深色沉浸式、趣味连接型、动态商务风、便当盒式、电影感/硬件流、代码原生型、浅色虹彩液态玻璃、数字工坊/静谧艺廊
+description: 根据产品描述和参考图智能推荐设计风格并生成Landing Page，根据产品自动解析配置，专为Coze平台设计，支持对话式持续修改、上下文配置管理、文件自动生成，交付可直接部署的完整网站包（HTML + 图片资源）。AI 深度理解 2025 三大核心设计趋势（物理质感回归、网格化与模块化、展示即交互），自动匹配最佳风格，生成高品质页面
 dependency:
   python:
     - beautifulsoup4>=4.12.0
@@ -29,7 +29,7 @@ dependency:
 
 ### 生成原则
 1. **美学优先**：整体美学高度和视觉冲击力是首要目标，代码只是实现载体
-2. **最佳实践**：`template/` 下的 15 个 HTML 模板是每种风格的**代码标杆**——CSS 技巧、动效实现、响应式布局、交互模式均经过验证。AI 生成时应以此为质量基线，对齐或超越，而非仅参考风格
+2. **最佳实践**：`template/` 下的 HTML 模板是每种风格的**代码标杆**——CSS 技巧、动效实现、响应式布局、交互模式均经过验证。AI 生成时应以此为质量基线，对齐或超越，而非仅参考风格
 3. **视觉冲击**：优先考虑动效、光影、质感等视觉元素，提升页面"活"的感觉
 4. **灵活创作**：模板是标杆而非模具——AI 应理解其设计精髓后，根据具体产品灵活调整布局、数量、配色，不拘泥于模板的具体实现细节
 
@@ -43,7 +43,7 @@ dependency:
 - `./output/` - **交付包目录**（用户下载的完整网站）
   - `./output/index.html` - Landing Page 主文件
   - `./output/assets/` - 图片资源目录（AI 生成 / 用户提供的图片）
-- `./template/` - 模板库（Skill自带，15种风格的最佳实践标杆）
+- `./templates/` - 模板库（Skill自带，多种风格的最佳实践标杆）
 - `./` - 对话工作目录
 
 ### 上下文管理
@@ -55,15 +55,23 @@ dependency:
 最终交付给用户的是 `output/` 目录，结构如下：
 ```
 output/
-├── index.html          ← Landing Page（图片引用相对路径 assets/xxx.png）
+├── index.html              ← Landing Page（图片引用相对路径 assets/xxx.png）
 └── assets/
-    ├── hero.png         ← Hero 主图
-    ├── feature-1.png    ← 功能配图
-    ├── feature-2.png
-    └── ...              ← 其他图片资源
+    ├── hero.png             ← Hero 主图（几乎所有模板）
+    ├── section-1.png        ← 功能/内容分区配图（模板 06/07/10/14）
+    ├── section-2.png
+    ├── content-1.png        ← 内容区配图（模板 04 双列布局）
+    ├── step-1.png           ← 步骤配图（模板 09 趣味连接型）
+    ├── story-1.png          ← 叙事配图（模板 03 故事讲述型）
+    ├── immersive.png        ← 沉浸式大图（模板 08 深色沉浸式）
+    ├── editorial-1.png      ← 编辑大图（模板 15 数字工坊/静谧艺廊）
+    ├── gallery-1.png        ← 画廊图（模板 15 数字工坊/静谧艺廊）
+    ├── video-thumbnail.png  ← 视频缩略图（模板 04 双列布局）
+    └── ...                  ← 其他图片资源
 ```
 - HTML 中图片使用**相对路径** `assets/xxx.png`，用户下载整个 `output/` 目录后可直接在浏览器打开 `index.html` 预览
-- 图片文件命名规则：`{槽位类型}-{序号}.{ext}`（如 `hero.png`、`feature-1.png`、`gallery-3.jpg`）
+- 图片文件命名规则：`{data-slot类型}-{序号}.{ext}`，与 HTML 模板中的 `data-slot` 属性一一对应
+- 完整的 data-slot 类型：`hero`、`section`、`content`、`step`、`story`、`immersive`、`editorial`、`gallery`、`video-thumbnail`
 - 用户也可将整个 `output/` 目录直接部署到静态托管（GitHub Pages、Vercel、Netlify 等）
 
 ## 操作步骤
@@ -122,7 +130,7 @@ output/
 
 ### 脚本
 - [generate_landing_page.py](scripts/generate_landing_page.py) - 后处理工具：校验config（基于config-guide.md）+ 注入图片URL + 验证HTML结构
-- [parse_landing_page.py](scripts/parse_landing_page.py) - 解析器：从已有HTML提取config（支持全15种模板识别）
+- [parse_landing_page.py](scripts/parse_landing_page.py) - 解析器：从已有HTML提取config（支持全部模板风格识别）
 
 ### 参考文档
 - [index.md](references/index.md) - 模板分类索引与选择指南（风格分派、关键词映射、设计哲学）
@@ -134,6 +142,6 @@ output/
 - [workflows.md](references/workflows.md) - 对话流程示例（从零开始、从已有HTML优化、含图片等场景）
 
 ### 模板库
-[template/](template/) - 15种HTML模板代码参考（landing-page-01到landing-page-15）
+[template/](template/) - HTML 模板代码参考（多种风格的最佳实践标杆）
 
 **注意**：HTML 模板是每种风格的最佳实践标杆——CSS 技巧、动效、响应式、交互模式均经过验证。AI 生成时应以此为质量基线对齐或超越，同时根据具体产品灵活调整，不拘泥于模板的具体数据和布局细节。图片在生成阶段根据用户产品内容动态规划，模板本身不打包任何图片资源。
